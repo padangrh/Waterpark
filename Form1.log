@@ -1,0 +1,66 @@
+Line 17: Class MSComctlLib.ImageList of control ImageList2 was not a loaded control class.
+Line 51: Class MSComctlLib.ListView of control lv_supplier was not a loaded control class.
+Line 105: Class MSComctlLib.ImageList of control ImageList1 was not a loaded control class.
+Line 139: Class ComCtl3.CoolBar of control CoolBar1 was not a loaded control class.
+Line 161: Class MSComctlLib.Toolbar of control Toolbar1 was not a loaded control class.
+Line 213: Class MSComctlLib.ImageList of control ImageListOrder was not a loaded control class.
+Line 20: The property name _ExtentX in ImageList2 is invalid.
+Line 21: The property name _ExtentY in ImageList2 is invalid.
+Line 23: The property name ImageWidth in ImageList2 is invalid.
+Line 24: The property name ImageHeight in ImageList2 is invalid.
+Line 25: The property name MaskColor in ImageList2 is invalid.
+Line 26: The property name _Version in ImageList2 is invalid.
+Line 49: The property name Images in ImageList2 is invalid.
+Line 57: The property name _ExtentX in lv_supplier is invalid.
+Line 58: The property name _ExtentY in lv_supplier is invalid.
+Line 59: The property name View in lv_supplier is invalid.
+Line 60: The property name LabelWrap in lv_supplier is invalid.
+Line 61: The property name HideSelection in lv_supplier is invalid.
+Line 62: The property name FullRowSelect in lv_supplier is invalid.
+Line 63: The property name GridLines in lv_supplier is invalid.
+Line 64: The property name _Version in lv_supplier is invalid.
+Line 65: The property name ColHdrIcons in lv_supplier is invalid.
+Line 79: The property name NumItems in lv_supplier is invalid.
+Line 83: The property name ColumnHeader(1) in lv_supplier is invalid.
+Line 88: The property name ColumnHeader(2) in lv_supplier is invalid.
+Line 93: The property name ColumnHeader(3) in lv_supplier is invalid.
+Line 98: The property name ColumnHeader(4) in lv_supplier is invalid.
+Line 103: The property name ColumnHeader(5) in lv_supplier is invalid.
+Line 108: The property name _ExtentX in ImageList1 is invalid.
+Line 109: The property name _ExtentY in ImageList1 is invalid.
+Line 111: The property name ImageWidth in ImageList1 is invalid.
+Line 112: The property name ImageHeight in ImageList1 is invalid.
+Line 113: The property name MaskColor in ImageList1 is invalid.
+Line 114: The property name _Version in ImageList1 is invalid.
+Line 137: The property name Images in ImageList1 is invalid.
+Line 145: The property name _ExtentX in CoolBar1 is invalid.
+Line 146: The property name _ExtentY in CoolBar1 is invalid.
+Line 147: The property name _CBWidth in CoolBar1 is invalid.
+Line 148: The property name _CBHeight in CoolBar1 is invalid.
+Line 149: The property name _Version in CoolBar1 is invalid.
+Line 150: The property name Caption1 in CoolBar1 is invalid.
+Line 151: The property name Child1 in CoolBar1 is invalid.
+Line 152: The property name MinHeight1 in CoolBar1 is invalid.
+Line 153: The property name Width1 in CoolBar1 is invalid.
+Line 154: The property name NewRow1 in CoolBar1 is invalid.
+Line 155: The property name Child2 in CoolBar1 is invalid.
+Line 156: The property name MinHeight2 in CoolBar1 is invalid.
+Line 157: The property name Width2 in CoolBar1 is invalid.
+Line 158: The property name NewRow2 in CoolBar1 is invalid.
+Line 159: The property name MinHeight3 in CoolBar1 is invalid.
+Line 160: The property name NewRow3 in CoolBar1 is invalid.
+Line 167: The property name _ExtentX in Toolbar1 is invalid.
+Line 168: The property name _ExtentY in Toolbar1 is invalid.
+Line 169: The property name ButtonWidth in Toolbar1 is invalid.
+Line 170: The property name ButtonHeight in Toolbar1 is invalid.
+Line 172: The property name ImageList in Toolbar1 is invalid.
+Line 173: The property name HotImageList in Toolbar1 is invalid.
+Line 174: The property name _Version in Toolbar1 is invalid.
+Line 192: The property name Buttons in Toolbar1 is invalid.
+Line 216: The property name _ExtentX in ImageListOrder is invalid.
+Line 217: The property name _ExtentY in ImageListOrder is invalid.
+Line 219: The property name ImageWidth in ImageListOrder is invalid.
+Line 220: The property name ImageHeight in ImageListOrder is invalid.
+Line 221: The property name MaskColor in ImageListOrder is invalid.
+Line 222: The property name _Version in ImageListOrder is invalid.
+Line 233: The property name Images in ImageListOrder is invalid.
