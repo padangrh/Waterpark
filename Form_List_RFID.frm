@@ -264,6 +264,16 @@ Private Sub cb_Search_Click()
     txt_Search.Text = ""
 End Sub
 
+Private Sub cb_Search_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
+End Sub
+
 Private Sub chk_Nonaktif_Click()
     reload_list
 End Sub
@@ -380,7 +390,7 @@ End Sub
 Private Sub lv_RFID_DblClick()
     If Not (lv_RFID.SelectedItem Is Nothing) Then
         Form_EditRFID.Show
-        Form_EditRFID.Init lv_RFID.SelectedItem.Text, lv_RFID.SelectedItem.SubItems(1), lv_RFID.SelectedItem.SubItems(2), lv_RFID.SelectedItem.SubItems(3)
+        Form_EditRFID.init lv_RFID.SelectedItem.Text, lv_RFID.SelectedItem.SubItems(1), lv_RFID.SelectedItem.SubItems(2), lv_RFID.SelectedItem.SubItems(3)
     End If
 End Sub
 

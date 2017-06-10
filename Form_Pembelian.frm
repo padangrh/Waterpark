@@ -10,9 +10,9 @@ Begin VB.Form Form_Pembelian
    ClientWidth     =   16320
    KeyPreview      =   -1  'True
    LinkTopic       =   "Form11"
-   ScaleHeight     =   13046.83
+   ScaleHeight     =   13064.73
    ScaleMode       =   0  'User
-   ScaleWidth      =   34569.55
+   ScaleWidth      =   42894.2
    StartUpPosition =   2  'CenterScreen
    WindowState     =   2  'Maximized
    Begin MSComctlLib.ListView list_nama 
@@ -550,7 +550,7 @@ End Sub
 
 Private Sub kosongkan()
     txt_kode.Text = ""
-    txt_Nama.Text = ""
+    txt_nama.Text = ""
     txt_harga.Text = ""
     txt_return.Text = 0
     txt_jumlah.Text = 1
@@ -567,6 +567,36 @@ Private Sub list_nama_KeyDown(key As Integer, Shift As Integer)
     End If
 End Sub
 
+Private Sub txt_jumlah_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 48 To 57, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
+End Sub
+
+Private Sub txt_kode_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
+End Sub
+
+Private Sub txt_nama_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
+End Sub
+
 Private Sub txt_nama_LostFocus()
     If Not Me.ActiveControl Is Nothing Then
         If Not Me.ActiveControl.Name = "list_nama" Then
@@ -578,7 +608,7 @@ End Sub
 Private Sub list_nama_DblClick()
     If getItemByID(list_nama.SelectedItem.Text) Then
         txt_kode.Text = rsbarang!kode
-        txt_Nama.Text = rsbarang!nama
+        txt_nama.Text = rsbarang!nama
         txt_harga.Text = Format(rsbarang!harga_modal, "###,###,###")
         list_nama.Visible = False
         txt_jumlah.SetFocus
@@ -650,15 +680,15 @@ Private Sub txt_kode_KeyDown(key As Integer, Shift As Integer)
         Dim kode As String
         kode = Trim(txt_kode.Text)
         If getItemByID(kode) Then
-            txt_Nama.Text = rsbarang!nama
+            txt_nama.Text = rsbarang!nama
             txt_harga.Text = Format(rsbarang!harga_modal, "###,###,###")
             txt_jumlah.SetFocus
             txt_jumlah.SelLength = Len(txt_jumlah.Text)
         Else
             MsgBox ("Kode ini tidak terdaftar")
         End If
-    ElseIf Len(txt_Nama) > 0 Then
-        txt_Nama = ""
+    ElseIf Len(txt_nama) > 0 Then
+        txt_nama = ""
         txt_harga = ""
     End If
 End Sub
@@ -689,7 +719,7 @@ Private Sub txt_nama_KeyDown(key As Integer, Shift As Integer)
     list_nama.ListItems.Clear
     list_nama.Visible = True
     Dim rsFilter As ADODB.Recordset
-    Set rsFilter = con.Execute("select * from tbbarang where nama like '%" & txt_Nama.Text & "%'")
+    Set rsFilter = con.Execute("select * from tbbarang where nama like '%" & txt_nama.Text & "%'")
     
     If rsFilter.EOF Then
         Exit Sub
@@ -731,4 +761,14 @@ Private Sub resetFaktur()
     lv_beli.ListItems.Clear
     kode_supplier = ""
     kosongkan
+End Sub
+
+Private Sub txt_return_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 48 To 57, 8  ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
 End Sub

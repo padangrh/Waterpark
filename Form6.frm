@@ -358,9 +358,15 @@ Private Sub btn_kategori_Click()
 End Sub
 
 Private Sub cb_kategori_KeyPress(key As Integer)
-    If key = 13 Then
-        txt_jual.SetFocus
-    End If
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case 13
+            txt_jual.SetFocus
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
 End Sub
 
 Private Sub Form_Activate()
@@ -371,7 +377,7 @@ Private Sub Form_Activate()
     End If
 End Sub
 
-Private Sub btn_save_Click()
+Private Sub btn_Save_Click()
     Dim a As New ADODB.Recordset
     
     'kerjakan cek kategori
@@ -417,7 +423,7 @@ Sub kosongkan()
     'txt_modal = 0
     txt_jual = 0
 End Sub
-Private Sub btn_cancel_Click()
+Private Sub btn_Cancel_Click()
     Unload Me
 End Sub
 Private Sub Form_Load()
@@ -486,26 +492,44 @@ Private Sub txt_kode_change()
 
 End Sub
 
-Private Sub txt_kode_keypress(KeyAscii As Integer)
+Private Sub txt_kode_KeyPress(KeyAscii As Integer)
     If KeyAscii = 13 Then
         txt_nama.SetFocus
     End If
 End Sub
-Private Sub txt_nama_keypress(KeyAscii As Integer)
-    If KeyAscii = 13 Then
-        cb_kategori.SetFocus
-    End If
+
+Private Sub txt_kode_supplier_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
 End Sub
 
-Private Sub txt_modal_keypress(KeyAscii As Integer)
-    If KeyAscii = 13 Then
-        txt_jual.SetFocus
-    End If
+Private Sub txt_nama_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case 13
+            cb_kategori.SetFocus
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
 End Sub
+
 Private Sub txt_jual_KeyPress(KeyAscii As Integer)
-    If KeyAscii = 13 Then
-        txt_kode_supplier.SetFocus
-    End If
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case 13
+            txt_kode_supplier.SetFocus
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
 End Sub
 
 Private Sub txt_kode_supplier_KeyDown(key As Integer, Shift As Integer)
@@ -535,6 +559,16 @@ Private Sub txt_nama_supplier_Change()
         list_supplier.Visible = False
         txt_sup_toggle = False
     End If
+End Sub
+
+Private Sub txt_nama_supplier_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
 End Sub
 
 'Private Sub txt_ketahanan_KeyPress(KeyAscii As Integer)

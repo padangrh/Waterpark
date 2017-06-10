@@ -83,7 +83,7 @@ Begin VB.Form Form_EditRFID
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "yyyy-MM-dd"
-      Format          =   37748739
+      Format          =   94961667
       CurrentDate     =   42922
    End
    Begin MSComCtl2.DTPicker dt_Jam 
@@ -105,7 +105,7 @@ Begin VB.Form Form_EditRFID
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "HH:mm:ss"
-      Format          =   37748739
+      Format          =   94961667
       UpDown          =   -1  'True
       CurrentDate     =   42922
    End
@@ -205,11 +205,37 @@ Private Sub btn_Save_Click()
     Unload Me
 End Sub
 
+Private Sub dt_Jam_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case 13
+            txt_status.SetFocus
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
+End Sub
+
+Private Sub dt_Tanggal_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case 13
+            dt_Jam.SetFocus
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
+End Sub
+
 Private Sub txt_status_KeyPress(KeyAscii As Integer)
     txt_status.Text = ""
     Select Case KeyAscii
         Case 48 To 49, 8 ' 0-1, backspace
         'Let these key codes pass through
+        Case 13
+            btn_save.SetFocus
         Case Else
         'All others get trapped
         KeyAscii = 0 ' set ascii 0 to trap others input

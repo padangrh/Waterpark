@@ -696,37 +696,37 @@ Private Sub print_bon(tunai As Integer)
     End If
     
     If ReplaceFlag Then
-        Dim rscompare As ADODB.Recordset
+        Dim rsCompare As ADODB.Recordset
         m = Form_ReplaceRFID.lv_RFID.ListItems.count
         Dim flagX() As Integer
         Dim foundX As Boolean
         ReDim Preserve flagX(m)
-        Set rscompare = con.Execute("Select * from tbrfid where nobukti = '" & oldNobukti & "'")
-        Do While Not rscompare.EOF
+        Set rsCompare = con.Execute("Select * from tbrfid where nobukti = '" & oldNobukti & "'")
+        Do While Not rsCompare.EOF
             foundX = False
             For m = 1 To Form_ReplaceRFID.lv_RFID.ListItems.count
-                If rscompare!rfid = Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) Then
+                If rsCompare!rfid = Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) Then
                     flagX(m) = 1
                     foundX = True
                     Exit For
                 End If
             Next
             If foundX = False Then
-                con.Execute ("Delete from tbrfid where nobukti = '" & oldNobukti & "' and rfid = '" & rscompare!rfid & "'")
-                Call backupAktif(rscompare!rfid, "perubahan kartu hilang - ReplaceRFID")
-                con.Execute ("delete from tbaktif where rfid = '" & rscompare!rfid & "'")
+                con.Execute ("Delete from tbrfid where nobukti = '" & oldNobukti & "' and rfid = '" & rsCompare!rfid & "'")
+                Call backupAktif(rsCompare!rfid, "perubahan kartu hilang - ReplaceRFID")
+                con.Execute ("delete from tbaktif where rfid = '" & rsCompare!rfid & "'")
             End If
-            rscompare.MoveNext
+            rsCompare.MoveNext
         Loop
-        Set rscompare = con.Execute("select tanggal, jam, nobukti from bill where nobukti = '" & oldNobukti & "'")
+        Set rsCompare = con.Execute("select tanggal, jam, nobukti from bill where nobukti = '" & oldNobukti & "'")
         For m = 1 To Form_ReplaceRFID.lv_RFID.ListItems.count
             If flagX(m) = 0 Then
-                con.Execute ("insert into tbaktif values('" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "','" & Format(rscompare!tanggal, "yyyy-mm-dd") & "','" & rscompare!jam & "','1','" & rscompare!nobukti & "')")
+                con.Execute ("insert into tbaktif values('" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "','" & Format(rsCompare!tanggal, "yyyy-mm-dd") & "','" & rsCompare!jam & "','1','" & rsCompare!nobukti & "')")
                 con.Execute ("insert into tbrfid values('" & oldNobukti & "','" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "')")
                 con.Execute ("insert into tbrfid values('" & txt_bon.Text & "','" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "')")
             End If
         Next
-        Set rscompare = Nothing
+        Set rsCompare = Nothing
     
         
 '        Dim namafile, huruf As String

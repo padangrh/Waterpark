@@ -151,7 +151,7 @@ Begin VB.Form Form_Laporan
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   97976321
+      Format          =   94961665
       CurrentDate     =   42810
    End
    Begin MSComCtl2.DTPicker dt_end 
@@ -173,7 +173,7 @@ Begin VB.Form Form_Laporan
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   97976321
+      Format          =   94961665
       CurrentDate     =   42810
    End
    Begin VB.CommandButton btn_Terlaris 
@@ -393,6 +393,26 @@ Private Sub chk_Sampai_Click()
     End If
 End Sub
 
+Private Sub dt_end_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
+End Sub
+
+Private Sub dt_start_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
+End Sub
+
 Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
     If KeyCode = 27 Then Unload Me
 End Sub
@@ -449,7 +469,7 @@ Private Sub txt_nama_supplier_KeyDown(key As Integer, Shift As Integer)
         'txt_nama_supplier = list_supplier.ListItems(0).SubItems(1)
         list_supplier.SetFocus
     ElseIf key = 13 And list_supplier.Visible = False And txt_kode_supplier.Text <> "" Then
-        btn_Save.SetFocus
+        btn_save.SetFocus
     Else
         txt_kode_supplier = ""
     End If

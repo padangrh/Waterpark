@@ -188,7 +188,7 @@ Begin VB.Form Form_List_Deposit
             Strikethrough   =   0   'False
          EndProperty
          CustomFormat    =   "dd-MM-yyyy"
-         Format          =   96534531
+         Format          =   95092739
          CurrentDate     =   42191
       End
       Begin VB.TextBox txt_filter 
@@ -404,13 +404,23 @@ Private Sub CoolBar1_HeightChanged(ByVal NewHeight As Single)
   Form_Resize
 End Sub
 
+Private Sub DTPicker1_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
+End Sub
+
 Private Sub Form_Load()
     DTPicker1 = Date
     Dim i As Integer
     For i = 1 To lv_deposit.ColumnHeaders.count
-      lv_deposit.ColumnHeaders.Item(i).Icon = 0
+      lv_deposit.ColumnHeaders.item(i).Icon = 0
     Next
-    lv_deposit.ColumnHeaders.Item(1).Icon = 1
+    lv_deposit.ColumnHeaders.item(1).Icon = 1
     txt_filter.Text = ""
     If isMaster Then
         txt_TotalDeposit.Visible = True
@@ -433,7 +443,7 @@ Private Sub lv_deposit_ColumnClick(ByVal ColumnHeader As MSComctlLib.ColumnHeade
     lv_deposit.Sorted = True
     Dim i As Byte
     For i = 1 To lv_deposit.ColumnHeaders.count
-      lv_deposit.ColumnHeaders.Item(i).Icon = 0
+      lv_deposit.ColumnHeaders.item(i).Icon = 0
     Next
     If lv_deposit.SortKey <> ColumnHeader.index - 1 Then
       lv_deposit.SortOrder = lvwAscending

@@ -210,7 +210,7 @@ Begin VB.Form Form_List_beli
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Format          =   36700161
+         Format          =   94961665
          CurrentDate     =   39459
       End
    End
@@ -557,9 +557,9 @@ Private Sub Form_Load()
   tgl = Date
   Dim i As Integer
   For i = 1 To LV1.ColumnHeaders.count
-    LV1.ColumnHeaders.Item(i).Icon = 0
+    LV1.ColumnHeaders.item(i).Icon = 0
   Next
-  LV1.ColumnHeaders.Item(1).Icon = 1
+  LV1.ColumnHeaders.item(1).Icon = 1
   txt_filter.Text = ""
   Toolbar1.Buttons(4).Visible = isMaster
   Toolbar1.Buttons(5).Visible = isMaster
@@ -576,7 +576,7 @@ Private Sub LV1_ColumnClick(ByVal ColumnHeader As MSComctlLib.ColumnHeader)
   LV1.Sorted = True
   Dim i As Byte
   For i = 1 To LV1.ColumnHeaders.count
-    LV1.ColumnHeaders.Item(i).Icon = 0
+    LV1.ColumnHeaders.item(i).Icon = 0
   Next
   If LV1.SortKey <> ColumnHeader.index - 1 Then
     LV1.SortOrder = lvwAscending
@@ -591,6 +591,16 @@ Private Sub LV1_ColumnClick(ByVal ColumnHeader As MSComctlLib.ColumnHeader)
       ColumnHeader.Icon = 1
     End If
   End If
+End Sub
+
+Private Sub tgl_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
 End Sub
 
 Private Sub txt_filter_change()
@@ -632,7 +642,7 @@ Public Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
             Settlement
         Case 4
             Form_Print_Beli.Show
-            Form_Print_Beli.Init LV1.SelectedItem.Text, 0, False
+            Form_Print_Beli.init LV1.SelectedItem.Text, 0, False
         Case 5
             deleteRecord
     End Select

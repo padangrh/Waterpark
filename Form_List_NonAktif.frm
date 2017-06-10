@@ -152,7 +152,7 @@ Begin VB.Form Form_List_NonAktif
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "yyyy-MM-dd"
-      Format          =   95748099
+      Format          =   95092739
       CurrentDate     =   42810
    End
    Begin MSComCtl2.DTPicker dt_end 
@@ -175,7 +175,7 @@ Begin VB.Form Form_List_NonAktif
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "yyyy-MM-dd"
-      Format          =   95748099
+      Format          =   95092739
       CurrentDate     =   42810
    End
    Begin VB.Label Label4 
@@ -257,6 +257,15 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+Private Sub cb_Search_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
+End Sub
 
 Private Sub chk_Sampai_Click()
     If chk_Sampai.Value = 0 Then
@@ -280,8 +289,28 @@ Private Sub dt_end_Change()
     reload_list
 End Sub
 
+Private Sub dt_end_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
+End Sub
+
 Private Sub dt_start_Change()
     reload_list
+End Sub
+
+Private Sub dt_start_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
 End Sub
 
 Private Sub Form_Load()
@@ -380,4 +409,14 @@ Sub reload_list()
         aitem.SubItems(5) = rsRFID!login
         rsRFID.MoveNext
     Loop
+End Sub
+
+Private Sub txt_Search_KeyPress(KeyAscii As Integer)
+    Select Case KeyAscii
+        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
+        'Let these key codes pass through
+        Case Else
+        'All others get trapped
+        KeyAscii = 0 ' set ascii 0 to trap others input
+    End Select
 End Sub
