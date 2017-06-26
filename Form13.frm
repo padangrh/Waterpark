@@ -505,6 +505,7 @@ Private Sub print_bon(tunai As Integer)
         
         ' find kdsuplier1
         Dim kdsuplier_Temp As ADODB.Recordset
+        Dim rsReader As ADODB.Recordset
         
         If ReplaceFlag = False Then
             Do While i <= Form_Penjualan.lv_jual.ListItems.count
@@ -522,9 +523,20 @@ Private Sub print_bon(tunai As Integer)
             For i = 1 To Form_Penjualan.lv_RFID.ListItems.count
                 If isInTBAktif(Form_Penjualan.lv_RFID.ListItems(i).SubItems(1)) = False Then
                     con.Execute ("insert into tbaktif values('" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','1','" & txt_bon.Text & "')")
+                    con.Execute ("insert into tbreader (rfid) values ('" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "')")
+                    pushC1 Form_Penjualan.lv_RFID.ListItems(i).SubItems(1)
+                    'y
                 Else
                     Call backupAktif(Form_Penjualan.lv_RFID.ListItems(i).SubItems(1), txt_bon.Text & " - Print")
                     con.Execute ("update tbaktif set tanggal = '" & Format(Now, "yyyy-mm-dd") & "', jam = '" & Format(Now, "hh:mm:ss") & "', status = '1', keterangan = '" & txt_bon.Text & "' where rfid = '" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "'")
+                    ''berhubung reuse - do nothing
+                    Set rsReader = con.Execute("select * from tbreader where rfid = '" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "'")
+                    If rsReader.EOF Then
+                        con.Execute ("insert into tbreader (rfid) values ('" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "')")
+                        pushC1 Form_Penjualan.lv_RFID.ListItems(i).SubItems(1)
+                    End If
+                    Set rsReader = Nothing
+                    'y
                 End If
                 con.Execute ("insert into tbrfid values('" & txt_bon.Text & "','" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "')")
             Next
@@ -715,6 +727,9 @@ Private Sub print_bon(tunai As Integer)
                 con.Execute ("Delete from tbrfid where nobukti = '" & oldNobukti & "' and rfid = '" & rsCompare!rfid & "'")
                 Call backupAktif(rsCompare!rfid, "perubahan kartu hilang - ReplaceRFID")
                 con.Execute ("delete from tbaktif where rfid = '" & rsCompare!rfid & "'")
+                deleteC1 rsCompare!rfid
+                con.Execute ("delete from tbreader where rfid = '" & rsCompare!rfid & "'")
+                'y
             End If
             rsCompare.MoveNext
         Loop
@@ -722,6 +737,9 @@ Private Sub print_bon(tunai As Integer)
         For m = 1 To Form_ReplaceRFID.lv_RFID.ListItems.count
             If flagX(m) = 0 Then
                 con.Execute ("insert into tbaktif values('" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "','" & Format(rsCompare!tanggal, "yyyy-mm-dd") & "','" & rsCompare!jam & "','1','" & rsCompare!nobukti & "')")
+                con.Execute ("insert into tbreader (rfid) values ('" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "')")
+                pushC1 Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1)
+                'y
                 con.Execute ("insert into tbrfid values('" & oldNobukti & "','" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "')")
                 con.Execute ("insert into tbrfid values('" & txt_bon.Text & "','" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "')")
             End If
@@ -827,11 +845,5 @@ End Sub
 '    If Not rsAktif.EOF Then cekRFID = True
 'End Function
 Private Sub txt_uang_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 48 To 57, 8 '  0-9 and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 1)
 End Sub

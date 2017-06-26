@@ -3,14 +3,14 @@ Object = "{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCT2.OCX"
 Object = "{00025600-0000-0000-C000-000000000046}#5.2#0"; "Crystl32.OCX"
 Begin VB.Form Form_Laporan 
    Caption         =   "Laporan"
-   ClientHeight    =   6690
+   ClientHeight    =   6480
    ClientLeft      =   60
    ClientTop       =   405
-   ClientWidth     =   8040
+   ClientWidth     =   7830
    KeyPreview      =   -1  'True
    LinkTopic       =   "Form1"
-   ScaleHeight     =   6690
-   ScaleWidth      =   8040
+   ScaleHeight     =   6480
+   ScaleWidth      =   7830
    StartUpPosition =   3  'Windows Default
    Begin VB.CheckBox chk_Sampai 
       Height          =   255
@@ -151,7 +151,7 @@ Begin VB.Form Form_Laporan
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   94961665
+      Format          =   115343361
       CurrentDate     =   42810
    End
    Begin MSComCtl2.DTPicker dt_end 
@@ -173,7 +173,7 @@ Begin VB.Form Form_Laporan
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   94961665
+      Format          =   115343361
       CurrentDate     =   42810
    End
    Begin VB.CommandButton btn_Terlaris 
@@ -394,23 +394,11 @@ Private Sub chk_Sampai_Click()
 End Sub
 
 Private Sub dt_end_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub dt_start_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
@@ -423,92 +411,5 @@ Private Sub Form_Load()
     txt_sup_toggle = False
 End Sub
 
-Private Sub txt_kode_supplier_LostFocus()
-    If txt_kode_supplier <> "" Then
-        Call txt_kode_supplier_KeyDown(13, 1)
-    End If
-End Sub
 
-Private Sub txt_nama_supplier_Change()
-    If txt_nama_supplier.Text <> "" And txt_sup_toggle = False Then
-        list_supplier.Visible = True
-        reload_Supplier
-    Else
-        list_supplier.Visible = False
-        txt_sup_toggle = False
-    End If
-End Sub
 
-Private Sub txt_kode_supplier_KeyDown(key As Integer, Shift As Integer)
-    If key = 13 Then
-        txt_sup_toggle = True
-        
-        Set rsSupplier = con.Execute("select * from tbsuplier")
-        
-        If getSupplier(txt_kode_supplier) Then
-            txt_nama_supplier.Text = rsSupplier!nmsuplier
-            'txt_ketahanan.SetFocus
-            btn_Tenant.SetFocus
-        Else
-            MsgBox "Supplier tidak terdaftar"
-            txt_kode_supplier.Text = ""
-        End If
-    Else
-        txt_nama_supplier = ""
-    End If
-End Sub
-
-Private Sub txt_nama_supplier_KeyDown(key As Integer, Shift As Integer)
-    
-    If key = 40 Then
-        list_supplier.Visible = True
-        list_supplier.SetFocus
-        Exit Sub
-    ElseIf key = 13 And list_supplier.Visible = True Then
-        'txt_kode_supplier = list_supplier.ListItems(0).Text
-        'txt_nama_supplier = list_supplier.ListItems(0).SubItems(1)
-        list_supplier.SetFocus
-    ElseIf key = 13 And list_supplier.Visible = False And txt_kode_supplier.Text <> "" Then
-        btn_save.SetFocus
-    Else
-        txt_kode_supplier = ""
-    End If
-End Sub
-
-Private Sub list_supplier_dblclick()
-    If list_supplier.SelectedItem.index >= 0 Then
-        txt_kode_supplier = list_supplier.SelectedItem.Text
-        txt_nama_supplier = list_supplier.SelectedItem.SubItems(1)
-        'txt_ketahanan.SetFocus
-        btn_Tenant.SetFocus
-    End If
-End Sub
-
-Private Sub list_supplier_keydown(key As Integer, Shift As Integer)
-    If key = 13 Then
-        list_supplier_dblclick
-    End If
-End Sub
-
-Private Sub list_supplier_LostFocus()
-    list_supplier.Visible = False
-End Sub
-
-Private Sub reload_Supplier()
-    'list_supplier.Visible = True
-    list_supplier.ListItems.Clear
-    Dim rsSup As ADODB.Recordset
-    Set rsSup = con.Execute("select * from tbsuplier where nmsuplier like '%" & txt_nama_supplier & "%'")
-    If rsSup.EOF Then
-        list_supplier.Visible = False
-        Exit Sub
-    End If
-    
-    rsSup.MoveFirst
-    Do While Not rsSup.EOF
-        list_supplier.ListItems.Add(, , rsSup!kdsuplier).SubItems(1) = rsSup!nmsuplier
-        rsSup.MoveNext
-    Loop
-    
-    Set rsSup = Nothing
-End Sub

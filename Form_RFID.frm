@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.Form Form_RFID 
    BackColor       =   &H00F0F0FF&
    Caption         =   "RFID"
@@ -251,6 +251,9 @@ Private Sub btn_Save_Click()
                 con.Execute ("Delete from tbrfid where nobukti = '" & lbl_Nobukti.Caption & "' and rfid = '" & rsCompare!rfid & "'")
                 Call backupAktif(rsCompare!rfid, "perubahan kartu - RFID")
                 con.Execute ("delete from tbaktif where rfid = '" & rsCompare!rfid & "'")
+                deleteC1 rsCompare!rfid
+                con.Execute ("delete from tbreader where rfid = '" & rsCompare!rfid & "'")
+                'y
             End If
             rsCompare.MoveNext
         Loop
@@ -259,7 +262,9 @@ Private Sub btn_Save_Click()
             If flagX(m) = 0 Then
                 
                 con.Execute ("insert into tbaktif values('" & lv_RFID.ListItems(m).SubItems(1) & "','" & Format(rsCompare!tanggal, "yyyy-mm-dd") & "','" & rsCompare!jam & "','1','" & rsCompare!nobukti & "')")
-                'Call backupAktif(, "")
+                con.Execute ("insert into tbreader (rfid) values ('" & lv_RFID.ListItems(m).SubItems(1) & "')")
+                pushC1 lv_RFID.ListItems(m).SubItems(1)
+                'y
                 con.Execute ("insert into tbrfid values('" & lbl_Nobukti.Caption & "','" & lv_RFID.ListItems(m).SubItems(1) & "')")
             End If
         Next
@@ -303,7 +308,6 @@ End Sub
 Private Function RFIDinUse(noRFID As String) As Boolean
     RFIDinUse = False
     Dim rsTemp As ADODB.Recordset
-    'Set rsTemp = con.Execute("select * from tbaktif a, tbrfid b where a.rfid = b.rfid and status = '1' and nobukti <> '" & lbl_Nobukti.Caption & "' and a.rfid = '" & noRFID & "'")
     Set rsTemp = con.Execute("Select a.rfid as rfid,a.tanggal as tanggal,a.jam as jam, a.status as status, c.nobukti as nobukti from tbaktif a left join( select b.rfid, max(b.nobukti) as nobukti from tbrfid b group by b.rfid ) c on a.rfid = c.rfid where a.status = '1' and c.nobukti <> '" & lbl_Nobukti.Caption & "' and a.rfid = '" & noRFID & "'")
     If Not rsTemp.EOF Then RFIDinUse = True
     Set rsTemp = Nothing

@@ -1,12 +1,14 @@
 VERSION 5.00
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
+Object = "{FE9DED34-E159-408E-8490-B720A5E632C7}#1.0#0"; "zkemkeeper.dll"
 Begin VB.MDIForm FrmMain 
    BackColor       =   &H8000000C&
    Caption         =   "Main Menu"
    ClientHeight    =   10635
    ClientLeft      =   225
    ClientTop       =   855
-   ClientWidth     =   15060
+   ClientWidth     =   15705
    Icon            =   "menu.frx":0000
    LinkTopic       =   "MDIForm1"
    Picture         =   "menu.frx":628A
@@ -25,27 +27,27 @@ Begin VB.MDIForm FrmMain
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   6
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "menu.frx":71A2
+            Picture         =   "menu.frx":294AE
             Key             =   ""
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "menu.frx":768E
+            Picture         =   "menu.frx":2999A
             Key             =   ""
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "menu.frx":7940
+            Picture         =   "menu.frx":29C4C
             Key             =   ""
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "menu.frx":7C2E
+            Picture         =   "menu.frx":29F3A
             Key             =   ""
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "menu.frx":7F95
+            Picture         =   "menu.frx":2A2A1
             Key             =   ""
          EndProperty
          BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "menu.frx":8351
+            Picture         =   "menu.frx":2A65D
             Key             =   ""
          EndProperty
       EndProperty
@@ -56,8 +58,8 @@ Begin VB.MDIForm FrmMain
       Left            =   0
       TabIndex        =   0
       Top             =   0
-      Width           =   15060
-      _ExtentX        =   26564
+      Width           =   15705
+      _ExtentX        =   27702
       _ExtentY        =   1164
       ButtonWidth     =   1032
       ButtonHeight    =   1005
@@ -87,13 +89,73 @@ Begin VB.MDIForm FrmMain
             ImageIndex      =   5
          EndProperty
       EndProperty
-      Begin VB.PictureBox picStretched 
-         Height          =   255
-         Left            =   10080
-         ScaleHeight     =   195
-         ScaleWidth      =   315
+      Begin zkemkeeperCtl.CZKEM CZKEM3 
+         Height          =   375
+         Left            =   12240
+         OleObjectBlob   =   "menu.frx":4D891
+         TabIndex        =   8
+         Top             =   120
+         Visible         =   0   'False
+         Width           =   375
+      End
+      Begin zkemkeeperCtl.CZKEM CZKEM2 
+         Height          =   375
+         Left            =   11760
+         OleObjectBlob   =   "menu.frx":4D8B5
+         TabIndex        =   7
+         Top             =   120
+         Visible         =   0   'False
+         Width           =   375
+      End
+      Begin VB.CommandButton cmdC1_3 
+         BackColor       =   &H000000FF&
+         Height          =   615
+         Left            =   3720
+         MaskColor       =   &H000000FF&
+         Style           =   1  'Graphical
+         TabIndex        =   6
+         Top             =   0
+         Width           =   375
+      End
+      Begin VB.CommandButton cmdC1_2 
+         BackColor       =   &H000000FF&
+         Height          =   615
+         Left            =   3360
+         MaskColor       =   &H000000FF&
+         Style           =   1  'Graphical
+         TabIndex        =   5
+         Top             =   0
+         Width           =   375
+      End
+      Begin VB.CommandButton cmdC1_1 
+         BackColor       =   &H000000FF&
+         Height          =   615
+         Left            =   3000
+         MaskColor       =   &H000000FF&
+         Style           =   1  'Graphical
+         TabIndex        =   4
+         Top             =   0
+         Width           =   375
+      End
+      Begin VB.Timer Timer1 
+         Enabled         =   0   'False
+         Interval        =   1000
+         Left            =   10680
+         Top             =   120
+      End
+      Begin MSWinsockLib.Winsock Winsock1 
+         Left            =   10200
+         Top             =   120
+         _ExtentX        =   741
+         _ExtentY        =   741
+         _Version        =   393216
+      End
+      Begin zkemkeeperCtl.CZKEM CZKEM1 
+         Height          =   375
+         Left            =   11280
+         OleObjectBlob   =   "menu.frx":4D8D9
          TabIndex        =   3
-         Top             =   240
+         Top             =   120
          Visible         =   0   'False
          Width           =   375
       End
@@ -135,14 +197,6 @@ Begin VB.MDIForm FrmMain
          Text            =   "0"
          Top             =   0
          Width           =   2415
-      End
-      Begin VB.Image Ori_Image 
-         Height          =   375
-         Left            =   11280
-         Picture         =   "menu.frx":2B585
-         Stretch         =   -1  'True
-         Top             =   120
-         Width           =   975
       End
    End
    Begin VB.Menu p 
@@ -198,7 +252,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Dim active_form As Form
 
-Private Sub changeForm(new_form As Form)
+Public Sub changeForm(new_form As Form)
     If active_form Is new_form Then
         Exit Sub
     End If
@@ -230,6 +284,57 @@ End Sub
 Private Sub ad_Click()
     'Form_Deposit.Show vbModal, Me
     Call changeForm(Form_List_Deposit)
+End Sub
+
+Private Sub cmdC1_1_Click()
+    If cmdC1_1.BackColor <> &HFF00& Then
+        cmdC1_1.BackColor = &HFFFF&
+        If confirmC1(Setting_Object("C1_1")) Then
+            Dim C1_1Con As Boolean
+            CZKEM1.BASE64 = 1
+            C1_1Con = False
+            C1_1Con = CZKEM1.Connect_Net(Setting_Object("C1_1"), 4370)
+            If C1_1Con Then CZKEM1.Beep 150
+            refillC1 1
+            cmdC1_1.BackColor = &HFF00&
+        Else
+            cmdC1_1.BackColor = &HFF&
+        End If
+    End If
+End Sub
+
+Private Sub cmdC1_2_Click()
+    If cmdC1_2.BackColor <> &HFF00& Then
+        cmdC1_2.BackColor = &HFFFF&
+        If confirmC1(Setting_Object("C1_2")) Then
+            Dim C1_2Con As Boolean
+            CZKEM2.BASE64 = 1
+            C1_2Con = False
+            C1_2Con = CZKEM2.Connect_Net(Setting_Object("C1_2"), 4370)
+            If C1_2Con Then CZKEM2.Beep 150
+            refillC1 2
+            cmdC1_2.BackColor = &HFF00&
+        Else
+            cmdC1_2.BackColor = &HFF&
+        End If
+    End If
+End Sub
+
+Private Sub cmdC1_3_Click()
+    If cmdC1_3.BackColor <> &HFF00& Then
+        cmdC1_3.BackColor = &HFFFF&
+        If confirmC1(Setting_Object("C1_3")) Then
+            Dim C1_3Con As Boolean
+            CZKEM3.BASE64 = 1
+            C1_3Con = False
+            C1_3Con = CZKEM3.Connect_Net(Setting_Object("C1_3"), 4370)
+            If C1_3Con Then CZKEM3.Beep 150
+            refillC1 3
+            cmdC1_3.BackColor = &HFF00&
+        Else
+            cmdC1_3.BackColor = &HFF&
+        End If
+    End If
 End Sub
 
 Private Sub ebr_Click()
@@ -265,35 +370,6 @@ Private Sub lpr_Click()
     Form_Laporan.Show (1)
 End Sub
 
-
-Private Sub MDIForm_Resize()
-    Dim client_rect As Rect
-    Dim client_hwnd As Long
-
-    picStretched.Move 0, 0, ScaleWidth, ScaleHeight
-
-    ' Copy the original picture into picStretched.
-'    picStretched.PaintPicture _
-'        Ori_Image.Picture, _
-'        0, 0, _
-'        picStretched.ScaleWidth, _
-'        picStretched.ScaleHeight, _
-'        0, 0, _
-'        Ori_Image.Width, _
-'        Ori_Image.Height
-    
-
-    ' Set the MDI form's picture.
-    'FrmMain.Picture = picStretched.Picture
-    FrmMain.Picture = Ori_Image.Picture
-    ' Invalidate the picture.
-'    client_hwnd = FindWindowEx(Me.hWnd, 0, "MDIClient", _
-'        vbNullChar)
-'    GetClientRect client_hwnd, client_rect
-'    InvalidateRect client_hwnd, client_rect, 1
-
-End Sub
-
 Private Sub pb_Click()
     Call changeForm(Form_List_beli)
 End Sub
@@ -318,6 +394,10 @@ Private Sub sp_Click()
     Call changeForm(Form_List_Supplier)
 End Sub
 
+Private Sub Timer1_Timer()
+    Timer1.Enabled = False
+End Sub
+
 Private Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
     Select Case Button.index
     Case 1: PopupMenu p
@@ -328,13 +408,10 @@ Private Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
     End Select
 End Sub
 
-
 Private Sub MDIForm_Activate()
-    
     If username = "" Then
        frmlogin.Show 1
     End If
-    
 End Sub
 
 Private Sub MDIForm_Load()
@@ -358,9 +435,67 @@ Private Sub MDIForm_Load()
         MsgBox "Settings file is missing."
         Unload Me
     End If
+'    connectC1 ("192.168.1.250")
+    StatusC1_1 = Setting_Object("C1_1Status")
+    StatusC1_2 = Setting_Object("C1_2Status")
+    StatusC1_3 = Setting_Object("C1_3Status")
+    
+    If StatusC1_1 Then
+        If confirmC1(Setting_Object("C1_1")) Then
+            cmdC1_1.BackColor = &HFF00&
+            Dim C1_1Con As Boolean
+            CZKEM1.BASE64 = 1
+            C1_1Con = False
+            C1_1Con = CZKEM1.Connect_Net(Setting_Object("C1_1"), 4370)
+            If C1_1Con Then CZKEM1.Beep 150
+        Else
+            StatusC1_1 = False
+        End If
+    End If
+    If StatusC1_2 Then
+        If confirmC1(Setting_Object("C1_2")) Then
+            cmdC1_2.BackColor = &HFF00&
+            Dim C1_2Con As Boolean
+            CZKEM2.BASE64 = 1
+            C1_2Con = False
+            C1_2Con = CZKEM2.Connect_Net(Setting_Object("C1_2"), 4370)
+            If C1_2Con Then CZKEM2.Beep 150
+        Else
+            StatusC1_2 = False
+        End If
+    End If
+    If StatusC1_3 Then
+        If confirmC1(Setting_Object("C1_3")) Then
+            cmdC1_3.BackColor = &HFF00&
+            Dim C1_3Con As Boolean
+            CZKEM3.BASE64 = 1
+            C1_3Con = False
+            C1_3Con = CZKEM3.Connect_Net(Setting_Object("C1_3"), 4370)
+            If C1_3Con Then CZKEM3.Beep 150
+        Else
+            StatusC1_3 = False
+        End If
+    End If
+    
 End Sub
 
 Private Sub MDIForm_Unload(Cancel As Integer)
+'    disconnectC1
+    If StatusC1_1 Then
+        CZKEM1.Beep 150
+        DoEvents
+        CZKEM1.Disconnect
+    End If
+    If StatusC1_2 Then
+        CZKEM2.Beep 150
+        DoEvents
+        CZKEM2.Disconnect
+    End If
+    If StatusC1_3 Then
+        CZKEM3.Beep 150
+        DoEvents
+        CZKEM3.Disconnect
+    End If
     Dim Form As VB.Form
     For Each Form In VB.Forms
         Unload Form

@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Object = "{C932BA88-4374-101B-A56C-00AA003668DC}#1.1#0"; "MSMASK32.OCX"
 Begin VB.Form Form_Entri_Barang 
    BackColor       =   &H0000C000&
@@ -357,16 +357,9 @@ Private Sub btn_kategori_Click()
     con.Execute ("insert into tbkategori values('" & new_kategori & "')")
 End Sub
 
-Private Sub cb_kategori_KeyPress(key As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case 13
-            txt_jual.SetFocus
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+Private Sub cb_kategori_KeyPress(KeyAscii As Integer)
+    If KeyAscii = 13 Then txt_jual.SetFocus
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub Form_Activate()
@@ -499,37 +492,17 @@ Private Sub txt_kode_KeyPress(KeyAscii As Integer)
 End Sub
 
 Private Sub txt_kode_supplier_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub txt_nama_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case 13
-            cb_kategori.SetFocus
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    If KeyAscii = 13 Then cb_kategori.SetFocus
+    KeyAscii = validateKey(KeyAscii, 3)
 End Sub
 
 Private Sub txt_jual_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case 13
-            txt_kode_supplier.SetFocus
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    If KeyAscii = 13 Then txt_kode_supplier.SetFocus
+    KeyAscii = validateKey(KeyAscii, 1)
 End Sub
 
 Private Sub txt_kode_supplier_KeyDown(key As Integer, Shift As Integer)
@@ -562,13 +535,7 @@ Private Sub txt_nama_supplier_Change()
 End Sub
 
 Private Sub txt_nama_supplier_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 3)
 End Sub
 
 'Private Sub txt_ketahanan_KeyPress(KeyAscii As Integer)

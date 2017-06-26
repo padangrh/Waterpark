@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Object = "{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCT2.OCX"
 Begin VB.Form Form_List_NonAktif 
    Caption         =   "History"
@@ -45,7 +45,9 @@ Begin VB.Form Form_List_NonAktif
          Strikethrough   =   0   'False
       EndProperty
       Height          =   480
+      ItemData        =   "Form_List_NonAktif.frx":0000
       Left            =   1680
+      List            =   "Form_List_NonAktif.frx":0002
       TabIndex        =   2
       Text            =   "Combo1"
       Top             =   1920
@@ -124,11 +126,11 @@ Begin VB.Form Form_List_NonAktif
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   2
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Form_List_NonAktif.frx":0000
+            Picture         =   "Form_List_NonAktif.frx":0004
             Key             =   ""
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Form_List_NonAktif.frx":037B
+            Picture         =   "Form_List_NonAktif.frx":037F
             Key             =   ""
          EndProperty
       EndProperty
@@ -152,7 +154,7 @@ Begin VB.Form Form_List_NonAktif
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "yyyy-MM-dd"
-      Format          =   95092739
+      Format          =   111149059
       CurrentDate     =   42810
    End
    Begin MSComCtl2.DTPicker dt_end 
@@ -175,7 +177,7 @@ Begin VB.Form Form_List_NonAktif
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "yyyy-MM-dd"
-      Format          =   95092739
+      Format          =   111149059
       CurrentDate     =   42810
    End
    Begin VB.Label Label4 
@@ -258,13 +260,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 Private Sub cb_Search_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub chk_Sampai_Click()
@@ -290,13 +286,7 @@ Private Sub dt_end_Change()
 End Sub
 
 Private Sub dt_end_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub dt_start_Change()
@@ -304,13 +294,7 @@ Private Sub dt_start_Change()
 End Sub
 
 Private Sub dt_start_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub Form_Load()
@@ -393,6 +377,8 @@ Sub reload_list()
                 query = query & " and status like '%" & txt_Search.Text & "%'"
             Case 4
                 query = query & " and keterangan like '%" & txt_Search.Text & "%'"
+            Case 5
+                query = query & " and userid like '%" & txt_Search.Text & "%'"
         End Select
     End If
     
@@ -406,17 +392,11 @@ Sub reload_list()
         aitem.SubItems(2) = rsRFID!jam
         aitem.SubItems(3) = rsRFID!status
         aitem.SubItems(4) = rsRFID!keterangan
-        aitem.SubItems(5) = rsRFID!login
+        aitem.SubItems(5) = rsRFID!userid
         rsRFID.MoveNext
     Loop
 End Sub
 
 Private Sub txt_Search_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 3)
 End Sub

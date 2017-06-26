@@ -169,7 +169,7 @@ Begin VB.Form Form_List_Jual
             Strikethrough   =   0   'False
          EndProperty
          CustomFormat    =   "dd-MM-yyyy"
-         Format          =   95092739
+         Format          =   110231555
          CurrentDate     =   42191
       End
       Begin VB.TextBox txt_filter 
@@ -376,13 +376,7 @@ Private Sub CoolBar1_HeightChanged(ByVal NewHeight As Single)
 End Sub
 
 Private Sub DTPicker1_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub Form_Load()
@@ -517,13 +511,13 @@ Public Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
 End Sub
 
 Private Sub deletePenjualan()
-    If Me.ActiveControl.Name = "lv_tunai" Then
+    If Me.ActiveControl.name = "lv_tunai" Then
         If (Not lv_tunai.SelectedItem Is Nothing) Then
             If hapusTransaksi(lv_tunai.SelectedItem.Text) Then
                 lv_tunai.ListItems.Remove (lv_tunai.SelectedItem.index)
             End If
         End If
-    ElseIf Me.ActiveControl.Name = "lv_nontunai" Then
+    ElseIf Me.ActiveControl.name = "lv_nontunai" Then
         If (Not lv_nontunai.SelectedItem Is Nothing) Then
             If hapusTransaksi(lv_nontunai.SelectedItem.Text) Then
                 lv_nontunai.ListItems.Remove (lv_nontunai.SelectedItem.index)
@@ -554,8 +548,9 @@ Private Function hapusTransaksi(no_bon As String) As Boolean
 End Function
 
 Private Sub tambah()
-    Form_Penjualan.Show
-    CoolBar1.Bands(3).Caption = "Record : " & lv_tunai.ListItems.count
+    Call FrmMain.changeForm(Form_Penjualan)
+'    Form_Penjualan.Show
+'    CoolBar1.Bands(3).Caption = "Record : " & lv_tunai.ListItems.count
 End Sub
 
 Private Sub dtpicker1_Change()
@@ -577,11 +572,5 @@ Private Sub lv_nontunai_DblClick()
 End Sub
 
 Private Sub txt_filter_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub

@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.Form Form_Deposit 
    BackColor       =   &H00FFC0C0&
    Caption         =   "Ambil Deposit"
@@ -501,16 +501,6 @@ Private Sub kosongkan()
     txt_total.Text = 0
 End Sub
 
-Private Sub list_nama_lostfocus()
-    list_nama.Visible = False
-End Sub
-
-Private Sub list_nama_KeyDown(key As Integer, Shift As Integer)
-    If key = 13 Then
-        list_nama_DblClick
-    End If
-End Sub
-
 Private Sub lv_jual_KeyPress(KeyAscii As Integer)
     If Not IsNumeric(Chr(KeyAscii)) And Not KeyAscii = 8 Then
         KeyAscii = 0
@@ -653,6 +643,10 @@ Private Sub print_bon()
         For i = 1 To lv_jual.ListItems.count
             Call backupAktif(lv_jual.ListItems(i).SubItems(1), lbl_faktur.Caption)
             con.Execute ("delete from tbaktif where rfid = '" & lv_jual.ListItems(i).SubItems(1) & "'")
+            deleteC1 lv_jual.ListItems(i).SubItems(1)
+            con.Execute ("delete from tbreader where rfid = '" & lv_jual.ListItems(i).SubItems(1) & "'")
+            'y
+            
             con.Execute ("insert into tbrfiddeposit values('" & lbl_faktur & "', '" & lv_jual.ListItems(i).SubItems(1) & "','" & priceToNum(lv_jual.ListItems(i).SubItems(2)) & "')")
         Next
         
@@ -801,11 +795,5 @@ End Function
 '    If Not rsAktif.EOF Then cekRFID2 = True
 'End Function
 Private Sub txt_nama_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub

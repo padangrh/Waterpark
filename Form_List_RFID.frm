@@ -10,6 +10,25 @@ Begin VB.Form Form_List_RFID
    LinkTopic       =   "Form1"
    ScaleHeight     =   8220
    ScaleWidth      =   11730
+   Begin VB.CommandButton cmdSalin 
+      BackColor       =   &H000080FF&
+      Caption         =   "Salin"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   13.5
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   615
+      Left            =   6720
+      Style           =   1  'Graphical
+      TabIndex        =   9
+      Top             =   6840
+      Width           =   1575
+   End
    Begin VB.ComboBox cb_Search 
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -245,8 +264,14 @@ Private Sub btn_Aktivasi_Click()
         Call backupAktif(lv_RFID.SelectedItem.Text, btn_Aktivasi.Caption & " - list RFID")
         If lv_RFID.SelectedItem.SubItems(3) = 1 Then
             con.Execute ("update tbaktif set status = '0' where rfid = '" & lv_RFID.SelectedItem.Text & "'")
+            deleteC1 lv_RFID.SelectedItem.Text
+            con.Execute ("delete from tbreader where rfid = '" & lv_RFID.SelectedItem.Text & "'")
+            'y
         ElseIf lv_RFID.SelectedItem.SubItems(3) = 0 Then
             con.Execute ("update tbaktif set tanggal = '" & Format(Now, "yyyy-mm-dd") & "', jam = '" & Format(Now, "hh:mm:ss") & "', status = '1', keterangan = '" & username & "' where rfid = '" & lv_RFID.SelectedItem.Text & "'")
+            con.Execute ("insert into tbreader (rfid) values ('" & lv_RFID.SelectedItem.Text & "')")
+            pushC1 lv_RFID.SelectedItem.Text
+            'y
         End If
         reload_list
     End If
@@ -254,8 +279,12 @@ End Sub
 
 Private Sub btn_Hapus_Click()
     If lv_RFID.ListItems.count > 0 And MsgBox("Yakin akan menghapus RFID " & lv_RFID.SelectedItem.Text & " ?", vbYesNo, "Konfirmasi Hapus") = vbYes Then
+        'perubahan
         con.Execute ("insert into tbnonaktif values('" & lv_RFID.SelectedItem.Text & "','" & Format(lv_RFID.SelectedItem.SubItems(1), "yyyy-mm-dd") & "','" & lv_RFID.SelectedItem.SubItems(2) & "','" & lv_RFID.SelectedItem.SubItems(3) & "','dihapus-list rfid','" & username & "')")
         con.Execute ("Delete from tbaktif where rfid = '" & lv_RFID.SelectedItem.Text & "'")
+        deleteC1 lv_RFID.SelectedItem.Text
+        con.Execute ("Delete from tbreader where rfid = '" & lv_RFID.SelectedItem.Text & "'")
+        'y
         reload_list
     End If
 End Sub
@@ -265,17 +294,44 @@ Private Sub cb_Search_Click()
 End Sub
 
 Private Sub cb_Search_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub chk_Nonaktif_Click()
     reload_list
+End Sub
+
+Private Sub cmdSalin_Click()
+    If MsgBox("Transfer data?", vbYesNo, "Konfirmasi") = vbYes Then
+        cmdSalin.BackColor = &HFFFF&
+        If confirmC1(Setting_Object("C1_1")) Then
+            Dim C1_1Con As Boolean
+            FrmMain.CZKEM1.BASE64 = 1
+            C1_1Con = False
+            C1_1Con = FrmMain.CZKEM1.Connect_Net(Setting_Object("C1_1"), 4370)
+            If C1_1Con Then FrmMain.CZKEM1.Beep 150
+            refillC1 1
+        End If
+        If confirmC1(Setting_Object("C1_2")) Then
+            Dim C1_2Con As Boolean
+            FrmMain.CZKEM2.BASE64 = 1
+            C1_2Con = False
+            C1_2Con = FrmMain.CZKEM2.Connect_Net(Setting_Object("C1_2"), 4370)
+            If C1_2Con Then FrmMain.CZKEM2.Beep 150
+            refillC1 2
+        End If
+        If confirmC1(Setting_Object("C1_3")) Then
+            Dim C1_3Con As Boolean
+            FrmMain.CZKEM3.BASE64 = 1
+            C1_3Con = False
+            C1_3Con = FrmMain.CZKEM3.Connect_Net(Setting_Object("C1_3"), 4370)
+            If C1_3Con Then FrmMain.CZKEM3.Beep 150
+            refillC1 3
+        End If
+        cmdSalin.BackColor = &H80FF&
+        MsgBox "Data sudah disalin ke mesin"
+
+    End If
 End Sub
 
 Private Sub Form_Load()
@@ -293,34 +349,6 @@ Sub reload_list()
     Dim rsRFID As ADODB.Recordset
     Dim query As String
     Dim aitem As ListItem
-    ''query = "Select a.rfid as rfid,a.tanggal as tanggal,a.jam as jam, a.status as status, b.nobukti as nobukti from tbaktif a, tbrfid b where a.rfid = b.rfid"
-    
-    'old query
-'    query = "Select a.rfid as rfid,a.tanggal as tanggal,a.jam as jam, a.status as status, c.nobukti as nobukti from tbaktif a left join( select b.rfid, max(b.nobukti) as nobukti from tbrfid b group by b.rfid ) c on a.rfid = c.rfid"
-'    If txt_Search.Text <> "" Then
-'        Select Case cb_Search.ListIndex
-'            Case 0
-'                query = query & " where a.rfid like '%" & txt_Search.Text & "%'"
-'            Case 1
-'                query = query & " where cast(a.tanggal as char(20)) like '%" & txt_Search.Text & "%'"
-'            Case 2
-'                query = query & " where a.jam like '%" & txt_Search.Text & "%'"
-'            Case 3
-'                query = query & " where a.status like '%" & txt_Search.Text & "%'"
-'            Case 4
-'                query = query & " where c.nobukti like '%" & txt_Search.Text & "%'"
-'        End Select
-'    End If
-'    '"and a.rfid like '%" & txt_Search.Text & "%'"
-'    If chk_Nonaktif.Value = 0 Then
-'        If InStr(1, query, "where") > 0 Then
-'            query = query & " and "
-'        Else
-'            query = query & " where "
-'        End If
-'        query = query & "a.status = '1'"
-'    End If
-'    query = query & " order by c.nobukti desc"
     
     query = "Select * from tbaktif"
     If txt_Search.Text <> "" Then
@@ -337,7 +365,7 @@ Sub reload_list()
                 query = query & " where keterangan like '%" & txt_Search.Text & "%'"
         End Select
     End If
-    '"and a.rfid like '%" & txt_Search.Text & "%'"
+     
     If chk_Nonaktif.Value = 0 Then
         If InStr(1, query, "where") > 0 Then
             query = query & " and "
@@ -417,18 +445,13 @@ Private Sub btn_Tambah_Click()
     If Len(temp_RFID) = 10 Then
         Dim flagY As Boolean
         flagY = False
-'        Dim rsCheck As ADODB.Recordset
-'        Set rsCheck = con.Execute("Select * from tbaktif")
-'        Do While Not rsCheck.EOF
-'            If rsCheck!rfid = temp_RFID Then
-'                flagY = True
-'                Exit Do
-'            End If
-'            rsCheck.MoveNext
-'        Loop
+
         flagY = isInTBAktif(temp_RFID)
         If flagY = False Then
             con.Execute ("Insert into tbaktif values ('" & temp_RFID & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','1','" & username & "')")
+            con.Execute ("insert into tbreader (rfid) values ('" & temp_RFID & "')")
+            pushC1 temp_RFID
+            'y
             reload_list
         Else
             MsgBox ("Kartu sudah terdaftar")
@@ -439,11 +462,5 @@ Private Sub btn_Tambah_Click()
 End Sub
 
 Private Sub txt_Search_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8, 45, 58, 13 ' A-Z, 0-9, a-z, backspace, -, :, enter
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub

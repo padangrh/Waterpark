@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.Form Form_ReplaceRFID 
    BackColor       =   &H00FFC0C0&
    Caption         =   "Kartu Hilang"
@@ -443,10 +443,8 @@ Private Sub cmd_Search_Click()
     Dim rsCekRFID As ADODB.Recordset
     If Len(txt_Search.Text) = 10 Then
         Set rsCekRFID = con.Execute("Select a.* from tbrfid a, bill b where a.nobukti = b.nobukti and left(a.nobukti,1) <> 'R' and rfid = '" & txt_Search.Text & "' order by concat(b.tanggal, ' ', b.jam) desc ")
-
     Else
         Set rsCekRFID = con.Execute("Select * from bill where nobukti = '" & txt_Search.Text & "' and left(nobukti,1) <> 'R'")
-      
     End If
     
     If Not rsCekRFID.EOF Then
@@ -456,8 +454,10 @@ Private Sub cmd_Search_Click()
         lv_RFID.ListItems.Clear
         Set rsRFID = con.Execute("select * from tbrfid where nobukti = '" & lbl_Nobukti.Caption & "'")
         Do While Not rsRFID.EOF
-            Set litem = lv_RFID.ListItems.Add(, , lv_RFID.ListItems.count + 1)
-            litem.SubItems(1) = rsRFID!rfid
+            If isInTBAktif(rsRFID!rfid) Then
+                Set litem = lv_RFID.ListItems.Add(, , lv_RFID.ListItems.count + 1)
+                litem.SubItems(1) = rsRFID!rfid
+            End If
             rsRFID.MoveNext
         Loop
         Set rsRFID = Nothing
@@ -514,19 +514,15 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub txt_Search_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case 13
-            If Len(txt_Search.Text) >= 20 Then
-                txt_Search.Text = Right(txt_Search.Text, 10)
-                txt_Search.SelStart = Len(txt_Search.Text)
-            End If
-            cmd_Search_Click
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    If KeyAscii = 13 Then
+        If Len(txt_Search.Text) >= 20 Then
+            txt_Search.Text = Right(txt_Search.Text, 10)
+            txt_Search.SelStart = Len(txt_Search.Text)
+        End If
+        cmd_Search_Click
+    End If
+    
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub kosongkan()

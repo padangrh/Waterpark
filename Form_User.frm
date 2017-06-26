@@ -365,13 +365,8 @@ Attribute VB_Exposed = False
 Dim rsUser As ADODB.Recordset
 
 Private Sub cb_status_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    If KeyAscii = 13 Then Check1.SetFocus
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub Command1_Click()
@@ -489,21 +484,11 @@ Private Sub keluar()
 End Sub
 
 Private Sub txt_id_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    If KeyAscii = 13 Then txt_password.SetFocus
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub txt_password_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    If KeyAscii = 13 Then cb_status.SetFocus
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub

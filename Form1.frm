@@ -278,16 +278,16 @@ End Sub
 Private Sub Form_Load()
   Dim i As Integer
   For i = 1 To lv_supplier.ColumnHeaders.count
-    lv_supplier.ColumnHeaders.Item(i).Icon = 0
+    lv_supplier.ColumnHeaders.item(i).Icon = 0
   Next
-  lv_supplier.ColumnHeaders.Item(1).Icon = 1
+  lv_supplier.ColumnHeaders.item(1).Icon = 1
   txt_filter.Text = ""
   refreshlist
  End Sub
 Private Sub lv_supplier_ColumnClick(ByVal ColumnHeader As MSComctlLib.ColumnHeader)
   Dim i As Byte
   For i = 1 To lv_supplier.ColumnHeaders.count
-    lv_supplier.ColumnHeaders.Item(i).Icon = 0
+    lv_supplier.ColumnHeaders.item(i).Icon = 0
   Next
   If lv_supplier.SortKey <> ColumnHeader.index - 1 Then
     lv_supplier.SortOrder = lvwAscending
@@ -358,11 +358,5 @@ Private Sub txt_filter_change()
 End Sub
 
 Private Sub txt_filter_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub

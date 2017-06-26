@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Object = "{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCT2.OCX"
 Object = "{38911DA0-E448-11D0-84A3-00DD01104159}#1.1#0"; "COMCT332.OCX"
 Begin VB.Form Form_List_Deposit 
@@ -188,7 +188,7 @@ Begin VB.Form Form_List_Deposit
             Strikethrough   =   0   'False
          EndProperty
          CustomFormat    =   "dd-MM-yyyy"
-         Format          =   95092739
+         Format          =   111214595
          CurrentDate     =   42191
       End
       Begin VB.TextBox txt_filter 
@@ -405,13 +405,7 @@ Private Sub CoolBar1_HeightChanged(ByVal NewHeight As Single)
 End Sub
 
 Private Sub DTPicker1_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub Form_Load()
@@ -561,11 +555,7 @@ Private Sub lv_deposit_DblClick()
 End Sub
 
 Private Sub txt_filter_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
+
+

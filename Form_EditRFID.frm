@@ -83,7 +83,7 @@ Begin VB.Form Form_EditRFID
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "yyyy-MM-dd"
-      Format          =   94961667
+      Format          =   115343363
       CurrentDate     =   42922
    End
    Begin MSComCtl2.DTPicker dt_Jam 
@@ -105,7 +105,7 @@ Begin VB.Form Form_EditRFID
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "HH:mm:ss"
-      Format          =   94961667
+      Format          =   115343363
       UpDown          =   -1  'True
       CurrentDate     =   42922
    End
@@ -187,6 +187,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Dim tempStatus As String
+
 Private Sub btn_Cancel_Click()
     Unload Me
 End Sub
@@ -196,50 +198,38 @@ Public Sub init(numRFID As String, tanggalRFID As Date, jamRFID As String, statu
     dt_Tanggal.Value = tanggalRFID
     dt_Jam.Value = jamRFID
     txt_status.Text = statusRFID
+    tempStatus = statusRFID
 End Sub
 
 Private Sub btn_Save_Click()
     Call backupAktif(txt_RFID.Text, "perubahan - EditRFID")
     con.Execute ("Update tbaktif set tanggal = '" & Format(dt_Tanggal.Value, "yyyy-mm-dd") & "', jam = '" & Format(dt_Jam.Value, "HH:mm:ss") & "', status = '" & txt_status.Text & "', keterangan = '" & username & "' where rfid = '" & txt_RFID.Text & "'")
+    If tempStatus = "1" And txt_status.Text = "0" Then
+        deleteC1 txt_RFID.Text
+        con.Execute ("delete from tbreader where rfid = '" & txt_RFID.Text & "'")
+    ElseIf tempStatus = "0" And txt_status.Text = "1" Then
+        con.Execute ("insert into tbreader (rfid) values ('" & txt_RFID.Text & "')")
+        pushC1 txt_RFID.Text
+    End If
+    'y
     Form_List_RFID.reload_list
     Unload Me
 End Sub
 
 Private Sub dt_Jam_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case 13
-            txt_status.SetFocus
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    If KeyAscii = 13 Then txt_status.SetFocus
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub dt_Tanggal_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case 13
-            dt_Jam.SetFocus
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    If KeyAscii = 13 Then dt_Jam.SetFocus
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub txt_status_KeyPress(KeyAscii As Integer)
     txt_status.Text = ""
-    Select Case KeyAscii
-        Case 48 To 49, 8 ' 0-1, backspace
-        'Let these key codes pass through
-        Case 13
-            btn_save.SetFocus
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    If KeyAscii = 13 Then btn_Save.SetFocus
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub txt_status_LostFocus()

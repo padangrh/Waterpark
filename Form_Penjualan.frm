@@ -5,16 +5,16 @@ Object = "{648A5603-2C6E-101B-82B6-000000000014}#1.1#0"; "MSCOMM32.OCX"
 Begin VB.Form Form_Penjualan 
    BackColor       =   &H0000C000&
    Caption         =   "Transaksi Penjualan"
-   ClientHeight    =   10935
-   ClientLeft      =   60
-   ClientTop       =   405
+   ClientHeight    =   9945
+   ClientLeft      =   -840
+   ClientTop       =   450
    ClientWidth     =   20250
    KeyPreview      =   -1  'True
    LinkTopic       =   "Form11"
-   ScaleHeight     =   13046.83
+   MDIChild        =   -1  'True
+   ScaleHeight     =   11865.63
    ScaleMode       =   0  'User
    ScaleWidth      =   24147.85
-   StartUpPosition =   2  'CenterScreen
    WindowState     =   2  'Maximized
    Begin MSComctlLib.ListView list_nama 
       Height          =   2295
@@ -92,13 +92,13 @@ Begin VB.Form Form_Penjualan
       DTREnable       =   -1  'True
    End
    Begin MSComctlLib.ListView lv_jual 
-      Height          =   6855
+      Height          =   5775
       Left            =   360
       TabIndex        =   14
       Top             =   3360
-      Width           =   14235
-      _ExtentX        =   25109
-      _ExtentY        =   12091
+      Width           =   14595
+      _ExtentX        =   25744
+      _ExtentY        =   10186
       View            =   3
       LabelEdit       =   1
       LabelWrap       =   -1  'True
@@ -122,7 +122,7 @@ Begin VB.Form Form_Penjualan
       NumItems        =   6
       BeginProperty ColumnHeader(1) {BDD1F052-858B-11D1-B16A-00C0F0283628} 
          Text            =   "Kode Barang"
-         Object.Width           =   3698
+         Object.Width           =   3994
       EndProperty
       BeginProperty ColumnHeader(2) {BDD1F052-858B-11D1-B16A-00C0F0283628} 
          SubItemIndex    =   1
@@ -132,7 +132,7 @@ Begin VB.Form Form_Penjualan
       BeginProperty ColumnHeader(3) {BDD1F052-858B-11D1-B16A-00C0F0283628} 
          SubItemIndex    =   2
          Text            =   "Kategori"
-         Object.Width           =   2130
+         Object.Width           =   2515
       EndProperty
       BeginProperty ColumnHeader(4) {BDD1F052-858B-11D1-B16A-00C0F0283628} 
          Alignment       =   1
@@ -246,13 +246,13 @@ Begin VB.Form Form_Penjualan
       Width           =   4095
    End
    Begin MSComctlLib.ListView lv_RFID 
-      Height          =   6855
-      Left            =   15120
+      Height          =   5775
+      Left            =   15360
       TabIndex        =   20
       Top             =   3360
       Width           =   4755
       _ExtentX        =   8387
-      _ExtentY        =   12091
+      _ExtentY        =   10186
       View            =   3
       LabelEdit       =   1
       LabelWrap       =   -1  'True
@@ -299,7 +299,7 @@ Begin VB.Form Form_Penjualan
       Height          =   495
       Left            =   360
       TabIndex        =   15
-      Top             =   10320
+      Top             =   9240
       Width           =   15015
    End
    Begin VB.Label Label8 
@@ -470,7 +470,7 @@ Begin VB.Form Form_Penjualan
       Left            =   360
       TabIndex        =   17
       Top             =   1560
-      Width           =   19515
+      Width           =   19755
    End
    Begin VB.Label Label11 
       BackColor       =   &H0080FF80&
@@ -478,7 +478,7 @@ Begin VB.Form Form_Penjualan
       Left            =   360
       TabIndex        =   18
       Top             =   120
-      Width           =   19515
+      Width           =   19755
    End
 End
 Attribute VB_Name = "Form_Penjualan"
@@ -490,6 +490,12 @@ Dim rsbarang As ADODB.Recordset
 Dim txt_nama_toggle As Boolean
 Dim total_Bayar As Long
 
+Private Sub Command1_Click()
+    MsgBox Me.Top
+    MsgBox Me.Left
+    MsgBox Me.Height
+End Sub
+
 Private Sub Form_Load()
     lbl_user = username
     total_Bayar = 0
@@ -497,6 +503,9 @@ Private Sub Form_Load()
     kosongkan
     txt_nama_toggle = False
     Set rsbarang = con.Execute("select * from `tbbarang` where kode <> '2'")
+    Me.Top = 1320
+    Me.Left = 0
+    Me.Height = 9780
         
     Dim namafile, file_data, huruf As String
     Dim angka As Long
@@ -569,7 +578,7 @@ End Sub
 
 Private Sub kosongkan()
     txt_kode.Text = ""
-    txt_Nama.Text = ""
+    txt_nama.Text = ""
     txt_harga.Text = ""
     txt_jumlah.Text = 1
     list_nama.Visible = False
@@ -606,28 +615,16 @@ Private Sub lv_RFID_KeyPress(KeyAscii As Integer)
 End Sub
 
 Private Sub txt_jumlah_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 48 To 57, 8 '  0-9 & backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 1)
 End Sub
 
 Private Sub txt_kode_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 
 Private Sub txt_nama_Change()
     
-    If txt_Nama.Text <> "" And txt_nama_toggle = False Then
+    If txt_nama.Text <> "" And txt_nama_toggle = False Then
 '        list_nama.ListItems.Clear
         list_nama.Visible = True
 '        Dim rsFilter As ADODB.Recordset
@@ -656,18 +653,12 @@ Private Sub txt_nama_Change()
 End Sub
 
 Private Sub txt_nama_KeyPress(KeyAscii As Integer)
-    Select Case KeyAscii
-        Case 65 To 90, 48 To 57, 97 To 122, 8 ' A-Z, 0-9, a-z and backspace
-        'Let these key codes pass through
-        Case Else
-        'All others get trapped
-        KeyAscii = 0 ' set ascii 0 to trap others input
-    End Select
+    KeyAscii = validateKey(KeyAscii, 3)
 End Sub
 
 Private Sub txt_nama_LostFocus()
     If Not Me.ActiveControl Is Nothing Then
-        If Not Me.ActiveControl.Name = "list_nama" Then
+        If Not Me.ActiveControl.name = "list_nama" Then
             list_nama.Visible = False
         End If
     End If
@@ -676,7 +667,7 @@ End Sub
 Private Sub list_nama_DblClick()
     If getItemByID(list_nama.SelectedItem.Text) Then
         txt_kode.Text = rsbarang!kode
-        txt_Nama.Text = rsbarang!nama
+        txt_nama.Text = rsbarang!nama
         txt_harga.Text = Format(rsbarang!harga_jual, "###,###,##0")
         list_nama.Visible = False
         txt_jumlah.SetFocus
@@ -738,7 +729,7 @@ Private Sub txt_kode_KeyDown(key As Integer, Shift As Integer)
         Dim kode As String
         kode = Trim(txt_kode.Text)
         If getItemByID(kode) Then
-            txt_Nama.Text = rsbarang!nama
+            txt_nama.Text = rsbarang!nama
             txt_harga.Text = Format(rsbarang!harga_jual, "###,###,##0")
             txt_jumlah.SetFocus
             txt_jumlah.SelLength = Len(txt_jumlah.Text)
@@ -753,8 +744,8 @@ Private Sub txt_kode_KeyDown(key As Integer, Shift As Integer)
             MsgBox ("Kode ini tidak terdaftar")
             txt_kode.Text = ""
         End If
-    ElseIf Len(txt_Nama) > 0 Then
-        txt_Nama = ""
+    ElseIf Len(txt_nama) > 0 Then
+        txt_nama = ""
         txt_harga = ""
     End If
 End Sub
@@ -826,7 +817,7 @@ Public Sub nextFaktur()
     txt_total = "0"
     kosongkan
     txt_kode.SetFocus
-    Form_List_Jual.refreshlist
+'    Form_List_Jual.refreshlist
     
 '    If MSComm1.PortOpen Then
 '        MSComm1.Output = Chr$(&H1B) + Chr$(&H49) + Chr$(&HC)
@@ -839,7 +830,7 @@ Public Sub reload_list()
     list_nama.ListItems.Clear
     'list_nama.Visible = True
     Dim rsFilter As ADODB.Recordset
-    Set rsFilter = con.Execute("select * from tbbarang where nama like '%" & txt_Nama.Text & "%' and kode <> '2'")
+    Set rsFilter = con.Execute("select * from tbbarang where nama like '%" & txt_nama.Text & "%' and kode <> '2'")
     
     If rsFilter.EOF Then
         list_nama.Visible = False
@@ -921,7 +912,7 @@ Function cekRFID() As Boolean
 End Function
 
 Private Sub deleteBtn(Shift As Integer)
-    If Me.ActiveControl.Name = "lv_jual" Then
+    If Me.ActiveControl.name = "lv_jual" Then
         If (Not lv_jual.SelectedItem Is Nothing) Then
             If Shift = 1 Then
                 total_Bayar = 0
@@ -933,7 +924,7 @@ Private Sub deleteBtn(Shift As Integer)
                 lv_jual.ListItems.Remove (lv_jual.SelectedItem.index)
             End If
         End If
-    ElseIf Me.ActiveControl.Name = "lv_RFID" Then
+    ElseIf Me.ActiveControl.name = "lv_RFID" Then
         If (Not lv_RFID.SelectedItem Is Nothing) Then
             If Shift = 1 Then
                 Dim i As Integer
