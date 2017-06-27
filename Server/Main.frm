@@ -75,7 +75,7 @@ Begin VB.Form frmMain
       Width           =   495
    End
    Begin VB.Timer Tmr_RFIDEX 
-      Interval        =   5000
+      Interval        =   60000
       Left            =   360
       Top             =   2880
    End
@@ -252,18 +252,8 @@ Private Sub cmdUpdate_Click()
 End Sub
 
 Private Sub Form_Load()
-
-
-
     lblDT.Caption = Format(Now, "dd/MM/yyyy HH:mm:ss")
-    
 
-    
-'    Me.Enabled = False
-'    Me.Visible = False
-'    DoEvents
-'    frmlogin.Show
-    
     Dim namafile, file_data, huruf As String
     namafile = App.Path & "\DataReset.txt"
     IFile = FreeFile
@@ -273,7 +263,7 @@ Private Sub Form_Load()
     Dim xx As Integer
     xx = DateDiff("d", file_data, Now)
     If DateDiff("d", file_data, Now) > 0 Then
-        'con.Execute ("Delete from tbreader")
+        con.Execute ("Delete from tbreader")
         con.Execute ("alter table tbreader auto_increment = 1")
         Open namafile For Output As #1
         Print #1, Now
@@ -338,7 +328,7 @@ Private Sub tmr_Jam_Timer()
 End Sub
 
 Private Sub Tmr_RFIDEX_Timer()
-'    confirmAllC1
+    confirmAllC1
     Dim rsTbAktif As ADODB.Recordset
 '    Dim rsReader As ADODB.Recordset
     Set rsTbAktif = con.Execute("select * from tbaktif where time_to_sec(timeDIFF(now(),concat(tanggal, ' ' , jam)))/3600 > 1 and status <> 0")

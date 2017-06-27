@@ -60,26 +60,20 @@ End Function
 Public Sub confirmAllC1()
     Dim xx As Boolean
     xx = False
-    If StatusC1_1 Then
-        xx = confirmC1(Setting_Object("C1_1"))
-        If xx = False Then
-            frmMain.cmdC1_1.BackColor = &HFF&
-            StatusC1_1 = xx
-        End If
+    xx = confirmC1(Setting_Object("C1_1"))
+    If xx = False Then
+        frmMain.cmdC1_1.BackColor = &HFF&
+        StatusC1_1 = xx
     End If
-    If StatusC1_2 Then
-        xx = confirmC1(Setting_Object("C1_2"))
-        If xx = False Then
-            frmMain.cmdC1_2.BackColor = &HFF&
-            StatusC1_2 = xx
-        End If
+    xx = confirmC1(Setting_Object("C1_2"))
+    If xx = False Then
+        frmMain.cmdC1_2.BackColor = &HFF&
+        StatusC1_2 = xx
     End If
-    If StatusC1_3 Then
-        xx = confirmC1(Setting_Object("C1_3"))
-        If xx = False Then
-            frmMain.cmdC1_3.BackColor = &HFF&
-            StatusC1_3 = xx
-        End If
+    xx = confirmC1(Setting_Object("C1_3"))
+    If xx = False Then
+        frmMain.cmdC1_3.BackColor = &HFF&
+        StatusC1_3 = xx
     End If
     DoEvents
 End Sub
