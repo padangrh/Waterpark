@@ -354,7 +354,8 @@ Private Sub btn_kategori_Click()
     
     cb_kategori.Text = new_kategori
     cb_kategori.AddItem (new_kategori)
-    con.Execute ("insert into tbkategori values('" & new_kategori & "')")
+    'editV2
+    con.Execute ("insert into tbkategori (kode) values('" & new_kategori & "')")
 End Sub
 
 Private Sub cb_kategori_KeyPress(KeyAscii As Integer)
@@ -397,7 +398,8 @@ Private Sub btn_Save_Click()
         'disabled, hapus jumlah_akhir
         'con.Execute ("Insert into tbbarang values('" & Trim(txt_kode) & "' ,'" & txt_nama & "','" & cb_kategori.Text & "','" & Val(txt_modal) & "','" & Val(txt_jual) & "'," & Val(txt_stok) & ",'" & Val(txt_kode_supplier) & "','" & Format(dp_masuk, "yyyy-MM-dd") & "', '" & Val(txt_ketahanan) & "')")
         'con.Execute ("Insert into tbbarang values('" & Trim(txt_kode) & "' ,'" & txt_nama & "','" & cb_kategori.Text & "' ,'" & Val(txt_modal) & "','" & Val(txt_jual) & "','" & Val(txt_kode_supplier) & "')")
-        con.Execute ("Insert into tbbarang values('" & Trim(txt_kode) & "' ,'" & txt_nama & "' ,'" & cb_kategori.Text & "' ,'" & Val(txt_jual) & "' ,'" & Val(txt_kode_supplier) & "')")
+        'editV2
+        con.Execute ("Insert into tbbarang (kode, nama, kategori, harga_jual, kdsuplier) values('" & Trim(txt_kode) & "' ,'" & txt_nama & "' ,'" & cb_kategori.Text & "' ,'" & Val(txt_jual) & "' ,'" & Val(txt_kode_supplier) & "')")
     
     End If
     kosongkan
@@ -550,7 +552,7 @@ End Sub
 
 Private Sub txt_nama_supplier_LostFocus()
     If Not Me.ActiveControl Is Nothing Then
-        If Not Me.ActiveControl.Name = "list_supplier" Then
+        If Not Me.ActiveControl.name = "list_supplier" Then
             list_supplier.Visible = False
         End If
     End If

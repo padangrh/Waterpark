@@ -260,12 +260,14 @@ Private Sub btn_Save_Click()
         Set rsCompare = con.Execute("select tanggal, jam, nobukti from bill where nobukti = '" & lbl_Nobukti.Caption & "'")
         For m = 1 To lv_RFID.ListItems.count
             If flagX(m) = 0 Then
-                
-                con.Execute ("insert into tbaktif values('" & lv_RFID.ListItems(m).SubItems(1) & "','" & Format(rsCompare!tanggal, "yyyy-mm-dd") & "','" & rsCompare!jam & "','1','" & rsCompare!nobukti & "')")
+                'editV2
+                con.Execute ("insert into tbaktif (rfid, tanggal, jam, status, keterangan) values('" & lv_RFID.ListItems(m).SubItems(1) & "','" & Format(rsCompare!tanggal, "yyyy-mm-dd") & "','" & rsCompare!jam & "','1','" & rsCompare!nobukti & "')")
+                'editV2
                 con.Execute ("insert into tbreader (rfid) values ('" & lv_RFID.ListItems(m).SubItems(1) & "')")
                 pushC1 lv_RFID.ListItems(m).SubItems(1)
                 'y
-                con.Execute ("insert into tbrfid values('" & lbl_Nobukti.Caption & "','" & lv_RFID.ListItems(m).SubItems(1) & "')")
+                'editV2
+                con.Execute ("insert into tbrfid (nobukti, rfid) values('" & lbl_Nobukti.Caption & "','" & lv_RFID.ListItems(m).SubItems(1) & "')")
             End If
         Next
         Set rsCompare = Nothing

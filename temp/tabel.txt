@@ -1,0 +1,45 @@
+BILL
+(nobukti, kasir, tanggal, jam, jumlah, total, bayar, cash, diskon)
+
+BILL_BELI
+(nobukti, staff, tanggal, jam, total, kode_supplier, pembayaran, lunas, settled, tanggal_lunas)
+
+TBAKTIF
+(rfid, tanggal, jam, status, keterangan)
+
+TBBARANG
+(kode, nama, kategori, harga_jual, kdsuplier)
+
+TBBELI
+(nobukti, tglbukti, kode, nama_barang, harga, jumlah, return)
+
+TBDEPOSIT
+(nodeposit, kasir, tanggal, jam, deposit)
+
+TBDISKON
+(nobukti, supervisor, status, customer, nilai)
+
+TBJUAL
+(nobukti, tglbukti, kode, nama_barang, harga_jual, jumlah_jual, kdsuplier)
+
+TBKATEGORI
+(kode)
+
+TBLOGIN
+(userid, pass, posisi, hak1, hak2, hak3, hak4)
+
+TBNONAKTIF
+(rfid, tanggal, jam, status, keterangan, userid)
+
+TBREADER
+(id, rfid)
+
+TBRFID
+(nobukti, rfid)
+
+TBRFIDDEPOSIT
+(nodeposit, rfid, hargarfid)
+
+TBSUPLIER
+(kdsuplier, nmsuplier, alamat, telp, tgl_gabung, nama_rek, no_rek, bank)
+

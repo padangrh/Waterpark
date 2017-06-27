@@ -83,7 +83,7 @@ Begin VB.Form Form_EditRFID
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "yyyy-MM-dd"
-      Format          =   115343363
+      Format          =   95092739
       CurrentDate     =   42922
    End
    Begin MSComCtl2.DTPicker dt_Jam 
@@ -105,7 +105,7 @@ Begin VB.Form Form_EditRFID
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "HH:mm:ss"
-      Format          =   115343363
+      Format          =   95092739
       UpDown          =   -1  'True
       CurrentDate     =   42922
    End
@@ -208,6 +208,7 @@ Private Sub btn_Save_Click()
         deleteC1 txt_RFID.Text
         con.Execute ("delete from tbreader where rfid = '" & txt_RFID.Text & "'")
     ElseIf tempStatus = "0" And txt_status.Text = "1" Then
+        'editV2
         con.Execute ("insert into tbreader (rfid) values ('" & txt_RFID.Text & "')")
         pushC1 txt_RFID.Text
     End If
@@ -228,7 +229,7 @@ End Sub
 
 Private Sub txt_status_KeyPress(KeyAscii As Integer)
     txt_status.Text = ""
-    If KeyAscii = 13 Then btn_Save.SetFocus
+    If KeyAscii = 13 Then btn_save.SetFocus
     KeyAscii = validateKey(KeyAscii, 2)
 End Sub
 

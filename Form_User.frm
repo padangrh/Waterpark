@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.Form Form_User 
    Caption         =   "User"
    ClientHeight    =   5955
@@ -451,8 +451,8 @@ Private Sub tambah()
         MsgBox "User ID telah terpakai"
         Exit Sub
     End If
-    
-    con.Execute ("insert into tblogin values('" & txt_id & "', '" & txt_password & "', '" & cb_status.Text & "', " & Check1.Value & ", " & Check2.Value & ", " & Check3.Value & ", " & Check4.Value & ")")
+    'editV2
+    con.Execute ("insert into tblogin (userid, pass, posisi, hak1, hak2, hak3, hak4) values('" & txt_id & "', '" & txt_password & "', '" & cb_status.Text & "', " & Check1.Value & ", " & Check2.Value & ", " & Check3.Value & ", " & Check4.Value & ")")
     reload
     reset
 End Sub

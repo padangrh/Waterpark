@@ -97,7 +97,8 @@ Public Sub backupAktif(kodeRFID As String, reason As String)
     Dim rsAktif As ADODB.Recordset
     Set rsAktif = con.Execute("select * from tbaktif where rfid = '" & kodeRFID & "'")
     reason = rsAktif!keterangan & " - " & reason
-    con.Execute ("insert into tbnonaktif values ('" & rsAktif!rfid & "','" & Format(rsAktif!tanggal, "yyyy-mm-dd") & "','" & rsAktif!jam & "','" & rsAktif!status & "','" & reason & "','" & username & "')")
+    'editV2
+    con.Execute ("insert into tbnonaktif (rfid, tanggal, jam, status, keterangan, userid) values ('" & rsAktif!rfid & "','" & Format(rsAktif!tanggal, "yyyy-mm-dd") & "','" & rsAktif!jam & "','" & rsAktif!status & "','" & reason & "','" & username & "')")
     Set rsAktif = Nothing
 End Sub
 

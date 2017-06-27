@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.Form Form_List_RFID 
    BackColor       =   &H0080C0FF&
    Caption         =   "RFID Manager"
@@ -269,6 +269,7 @@ Private Sub btn_Aktivasi_Click()
             'y
         ElseIf lv_RFID.SelectedItem.SubItems(3) = 0 Then
             con.Execute ("update tbaktif set tanggal = '" & Format(Now, "yyyy-mm-dd") & "', jam = '" & Format(Now, "hh:mm:ss") & "', status = '1', keterangan = '" & username & "' where rfid = '" & lv_RFID.SelectedItem.Text & "'")
+            'editV2
             con.Execute ("insert into tbreader (rfid) values ('" & lv_RFID.SelectedItem.Text & "')")
             pushC1 lv_RFID.SelectedItem.Text
             'y
@@ -280,7 +281,8 @@ End Sub
 Private Sub btn_Hapus_Click()
     If lv_RFID.ListItems.count > 0 And MsgBox("Yakin akan menghapus RFID " & lv_RFID.SelectedItem.Text & " ?", vbYesNo, "Konfirmasi Hapus") = vbYes Then
         'perubahan
-        con.Execute ("insert into tbnonaktif values('" & lv_RFID.SelectedItem.Text & "','" & Format(lv_RFID.SelectedItem.SubItems(1), "yyyy-mm-dd") & "','" & lv_RFID.SelectedItem.SubItems(2) & "','" & lv_RFID.SelectedItem.SubItems(3) & "','dihapus-list rfid','" & username & "')")
+        'editV2
+        con.Execute ("insert into tbnonaktif (rfid, tanggal, jam, status, keterangan, userid) values('" & lv_RFID.SelectedItem.Text & "','" & Format(lv_RFID.SelectedItem.SubItems(1), "yyyy-mm-dd") & "','" & lv_RFID.SelectedItem.SubItems(2) & "','" & lv_RFID.SelectedItem.SubItems(3) & "','dihapus-list rfid','" & username & "')")
         con.Execute ("Delete from tbaktif where rfid = '" & lv_RFID.SelectedItem.Text & "'")
         deleteC1 lv_RFID.SelectedItem.Text
         con.Execute ("Delete from tbreader where rfid = '" & lv_RFID.SelectedItem.Text & "'")
@@ -448,7 +450,9 @@ Private Sub btn_Tambah_Click()
 
         flagY = isInTBAktif(temp_RFID)
         If flagY = False Then
-            con.Execute ("Insert into tbaktif values ('" & temp_RFID & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','1','" & username & "')")
+            'editV2
+            con.Execute ("Insert into tbaktif (rfid, tanggal, jam, status, keterangan) values ('" & temp_RFID & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','1','" & username & "')")
+            'editV2
             con.Execute ("insert into tbreader (rfid) values ('" & temp_RFID & "')")
             pushC1 temp_RFID
             'y

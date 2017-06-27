@@ -83,7 +83,7 @@ Begin VB.Form Form_Entri_Supplier
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "dd-MM-yyyy"
-      Format          =   21299203
+      Format          =   95092739
       CurrentDate     =   42145
    End
    Begin VB.CommandButton btn_cancel 
@@ -377,7 +377,8 @@ Private Sub btn_Save_Click()
     If getSupplier(txt_kode) Then
         con.Execute ("Update tbsuplier set nmsuplier='" & txt_nama & "', alamat='" & txt_alamat & "',telp='" & txt_telp & "',tgl_gabung='" & Format(DTPicker1, "yyyy-MM-dd") & "', nama_rek = '" & txt_nama_rek & "', no_rek = '" & txt_no_rek & "', bank = '" & txt_bank & "' where kdsuplier='" & txt_kode.Text & "'")
     Else
-        con.Execute ("Insert into tbsuplier values('" & txt_kode & "','" & txt_nama & "','" & txt_alamat & "','" & txt_telp & "','" & Format(DTPicker1, "yyyy-MM-dd") & "', '" & txt_nama_rek & "', '" & txt_no_rek & "', '" & txt_bank & "')")
+        'editV2
+        con.Execute ("Insert into tbsuplier (kdsuplier, nmsuplier, alamat, telp, tgl_gabung, nama_rek, no_rek, bank) values('" & txt_kode & "','" & txt_nama & "','" & txt_alamat & "','" & txt_telp & "','" & Format(DTPicker1, "yyyy-MM-dd") & "', '" & txt_nama_rek & "', '" & txt_no_rek & "', '" & txt_bank & "')")
     End If
     Unload Me
     Form_List_Supplier.refreshlist
@@ -466,7 +467,7 @@ Private Sub txt_no_rek_keypress(KeyAscii As Integer)
 End Sub
 
 Private Sub txt_bank_keypress(KeyAscii As Integer)
-    If KeyAscii = 13 Then btn_Save.SetFocus
+    If KeyAscii = 13 Then btn_save.SetFocus
     KeyAscii = validateKey(KeyAscii, 3)
 End Sub
 

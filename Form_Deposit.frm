@@ -496,7 +496,7 @@ Private Sub Form_KeyDown(key As Integer, Shift As Integer)
 End Sub
 
 Private Sub kosongkan()
-    txt_Nama.Text = ""
+    txt_nama.Text = ""
     txt_jumlah.Text = 0
     txt_total.Text = 0
 End Sub
@@ -505,9 +505,9 @@ Private Sub lv_jual_KeyPress(KeyAscii As Integer)
     If Not IsNumeric(Chr(KeyAscii)) And Not KeyAscii = 8 Then
         KeyAscii = 0
     Else
-        txt_Nama = Chr(KeyAscii)
-        txt_Nama.SetFocus
-        txt_Nama.SelStart = Len(txt_Nama.Text)
+        txt_nama = Chr(KeyAscii)
+        txt_nama.SetFocus
+        txt_nama.SelStart = Len(txt_nama.Text)
     End If
 End Sub
 
@@ -546,7 +546,7 @@ Private Sub txt_jumlah_KeyDown(key As Integer, Shift As Integer)
         Dim subtotal As String
         subtotal = Format(hargaTiket * Val(txt_jumlah), "###,###,###")
         
-        txt_Nama.SetFocus
+        txt_nama.SetFocus
     End If
 End Sub
 
@@ -557,11 +557,11 @@ End Sub
 Private Sub txt_nama_KeyDown(key As Integer, Shift As Integer)
 
     If key = 13 Then
-        If Len(txt_Nama.Text) = 10 Then
+        If Len(txt_nama.Text) = 10 Then
             Call tambah
         Else
             MsgBox "Masukkan nomor RFID yg benar"
-            txt_Nama.Text = ""
+            txt_nama.Text = ""
         End If
     End If
     
@@ -589,28 +589,28 @@ End Sub
 
 Sub tambah()
     
-    If txt_Nama.Text <> "" And Len(txt_Nama.Text) > 5 And cekRFID = True Then
+    If txt_nama.Text <> "" And Len(txt_nama.Text) > 5 And cekRFID = True Then
         Dim mitem As ListItem
         Dim query As String
-        query = "select a.rfid, b.`harga_jual` from tbaktif a, tbjual b, tbrfid c where a.tanggal = b.tglbukti and b.`nobukti` = c.nobukti  and a.rfid = c.rfid and kode = '2' and a.rfid = '" & txt_Nama.Text & "'"
-        If isInTBAktif(txt_Nama.Text) Then
+        query = "select a.rfid, b.`harga_jual` from tbaktif a, tbjual b, tbrfid c where a.tanggal = b.tglbukti and b.`nobukti` = c.nobukti  and a.rfid = c.rfid and kode = '2' and a.rfid = '" & txt_nama.Text & "'"
+        If isInTBAktif(txt_nama.Text) Then
             'get deposit
             Dim rsDep As ADODB.Recordset
             Set rsDep = con.Execute(query)
             If Not rsDep.EOF Then
                 Set mitem = lv_jual.ListItems.Add(, , lv_jual.ListItems.count + 1)
-                mitem.SubItems(1) = txt_Nama.Text
+                mitem.SubItems(1) = txt_nama.Text
                 mitem.SubItems(2) = rsDep!harga_jual
             End If
         Else
-            MsgBox ("RFID " & txt_Nama.Text & " tidak ditemukan")
+            MsgBox ("RFID " & txt_nama.Text & " tidak ditemukan")
         End If
         
     Else
         MsgBox ("RFID tidak valid atau sudah terdaftar")
     End If
-    txt_Nama.Text = ""
-    txt_Nama.SetFocus
+    txt_nama.Text = ""
+    txt_nama.SetFocus
     If lv_jual.ListItems.count > txt_jumlah.Text Then
         txt_jumlah.Text = lv_jual.ListItems.count
     End If
@@ -621,7 +621,7 @@ Function cekRFID() As Boolean
     If lv_jual.ListItems.count > 0 Then
         Dim i As Integer
         For i = 1 To lv_jual.ListItems.count
-            If txt_Nama.Text = lv_jual.ListItems.item(i).SubItems(1) Then
+            If txt_nama.Text = lv_jual.ListItems.item(i).SubItems(1) Then
                 cekRFID = False
             End If
         Next
@@ -646,11 +646,11 @@ Private Sub print_bon()
             deleteC1 lv_jual.ListItems(i).SubItems(1)
             con.Execute ("delete from tbreader where rfid = '" & lv_jual.ListItems(i).SubItems(1) & "'")
             'y
-            
-            con.Execute ("insert into tbrfiddeposit values('" & lbl_faktur & "', '" & lv_jual.ListItems(i).SubItems(1) & "','" & priceToNum(lv_jual.ListItems(i).SubItems(2)) & "')")
+            'editV2
+            con.Execute ("insert into tbrfiddeposit (nodeposit, rfid, hargarfid) values('" & lbl_faktur & "', '" & lv_jual.ListItems(i).SubItems(1) & "','" & priceToNum(lv_jual.ListItems(i).SubItems(2)) & "')")
         Next
-        
-        con.Execute ("insert into tbdeposit values('" & lbl_faktur.Caption & "','" & username & "', '" & Format(Now, "yyyy-mm-dd") & "', '" & Format(Now, "hh:mm:ss") & "'  ," & priceToNum(txt_total.Text) & " )")
+        'editV2
+        con.Execute ("insert into tbdeposit (nodeposit, kasir, tanggal, jam, deposit) values('" & lbl_faktur.Caption & "','" & username & "', '" & Format(Now, "yyyy-mm-dd") & "', '" & Format(Now, "hh:mm:ss") & "'  ," & priceToNum(txt_total.Text) & " )")
         
         
               

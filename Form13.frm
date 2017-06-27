@@ -514,15 +514,17 @@ Private Sub print_bon(tunai As Integer)
                 
                 'find kdsuplier2
                 Set kdsuplier_Temp = con.Execute("select kdsuplier from tbbarang where kode = '" & item.Text & "'")
-                
-                con.Execute ("insert into tbjual values('" & txt_bon & "', '" & tanggal & "', '" & item.Text & "', '" & item.SubItems(1) & "', " & priceToNum(item.SubItems(3)) & ", " & item.SubItems(4) & ", '" & kdsuplier_Temp!kdsuplier & "')")
+                'editV2
+                con.Execute ("insert into tbjual (nobukti, tglbukti, kode, nama_barang, harga_jual, jumlah_jual, kdsuplier) values('" & txt_bon & "', '" & tanggal & "', '" & item.Text & "', '" & item.SubItems(1) & "', " & priceToNum(item.SubItems(3)) & ", " & item.SubItems(4) & ", '" & kdsuplier_Temp!kdsuplier & "')")
                 'con.Execute ("update tbbarang set jumlah_akhir = jumlah_akhir - " & item.SubItems(3) & " where kode = '" & item.Text & "'")
                 i = i + 1
             Loop
     
             For i = 1 To Form_Penjualan.lv_RFID.ListItems.count
                 If isInTBAktif(Form_Penjualan.lv_RFID.ListItems(i).SubItems(1)) = False Then
-                    con.Execute ("insert into tbaktif values('" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','1','" & txt_bon.Text & "')")
+                    'editV2
+                    con.Execute ("insert into tbaktif (rfid, tanggal, jam, status, keterangan) values('" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','1','" & txt_bon.Text & "')")
+                    'editV2
                     con.Execute ("insert into tbreader (rfid) values ('" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "')")
                     pushC1 Form_Penjualan.lv_RFID.ListItems(i).SubItems(1)
                     'y
@@ -532,25 +534,29 @@ Private Sub print_bon(tunai As Integer)
                     ''berhubung reuse - do nothing
                     Set rsReader = con.Execute("select * from tbreader where rfid = '" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "'")
                     If rsReader.EOF Then
+                        'editV2
                         con.Execute ("insert into tbreader (rfid) values ('" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "')")
                         pushC1 Form_Penjualan.lv_RFID.ListItems(i).SubItems(1)
                     End If
                     Set rsReader = Nothing
                     'y
                 End If
-                con.Execute ("insert into tbrfid values('" & txt_bon.Text & "','" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "')")
+                'editV2
+                con.Execute ("insert into tbrfid (nobukti, rfid) values('" & txt_bon.Text & "','" & Form_Penjualan.lv_RFID.ListItems(i).SubItems(1) & "')")
             Next
         End If
         
         If priceToNum(txt_BesarDeposit) > 0 Then
-            con.Execute ("insert into tbjual values('" & txt_bon & "','" & tanggal & "','" & 2 & "', '" & "Deposit" & "'," & harga_Deposit & "," & priceToNum(txt_BesarDeposit) / harga_Deposit & ", '2')")
+            'editV2
+            con.Execute ("insert into tbjual (nobukti, tglbukti, kode, nama_barang, harga_jual, jumlah_jual, kdsuplier) values('" & txt_bon & "','" & tanggal & "','" & 2 & "', '" & "Deposit" & "'," & harga_Deposit & "," & priceToNum(txt_BesarDeposit) / harga_Deposit & ", '2')")
         End If
-        
-        con.Execute ("insert into bill values('" & txt_bon & "','" & username & "', '" & tanggal & "', '" & Format(Now, "hh:mm:ss") & "', " & priceToNum(txt_subTotal) & " ," & priceToNum(txt_grandTotal) & ", " & Val(txt_uang) & ", " & tunai & ", " & priceToNum(txt_diskon) & ")")
+        'editV2
+        con.Execute ("insert into bill (nobukti, kasir, tanggal, jam, jumlah, total, bayar, cash, diskon) values('" & txt_bon & "','" & username & "', '" & tanggal & "', '" & Format(Now, "hh:mm:ss") & "', " & priceToNum(txt_subTotal) & " ," & priceToNum(txt_grandTotal) & ", " & Val(txt_uang) & ", " & tunai & ", " & priceToNum(txt_diskon) & ")")
         Set rsBill = con.Execute("select * from bill where nobukti = '" & txt_bon & "'")
         
         If (Val(txt_diskon.Text)) > 0 Then
-            con.Execute ("insert into tbdiskon values('" & txt_bon & "', '" & dis_spv & "', '" & dis_status & "', '" & dis_cust & "', " & priceToNum(txt_diskon) & ")")
+            'editV2
+            con.Execute ("insert into tbdiskon (nobukti, supervisor, status, customer, nilai) values('" & txt_bon & "', '" & dis_spv & "', '" & dis_status & "', '" & dis_cust & "', " & priceToNum(txt_diskon) & ")")
         End If
               
     Else
@@ -560,7 +566,8 @@ Private Sub print_bon(tunai As Integer)
         Set rsDis = con.Execute("select * from tbdiskon where nobukti = '" & txt_bon & "'")
         If Val(txt_diskon) > 0 Then
             If rsDis.EOF = True Then
-                con.Execute ("insert into tbdiskon values('" & txt_bon & "', '" & dis_spv & "', '" & dis_status & "', '" & dis_cust & "', " & priceToNum(txt_diskon) & ")")
+                'editV2
+                con.Execute ("insert into tbdiskon (nobukti, supervisor, status, customer, nilai) values('" & txt_bon & "', '" & dis_spv & "', '" & dis_status & "', '" & dis_cust & "', " & priceToNum(txt_diskon) & ")")
             Else
                 con.Execute ("update tbdiskon set supervisor = '" & dis_spv & "', customer = '" & dis_cust & "', status = '" & dis_status & "', nilai = " & priceToNum(txt_diskon) & " where nobukti = '" & txt_bon.Text & "'")
             End If
@@ -574,7 +581,8 @@ Private Sub print_bon(tunai As Integer)
         Set rsDeposit = con.Execute("Select * from tbjual where kode = '2' and nobukti = '" & txt_bon & "'")
         If Val(txt_LoanedRFID) > 0 Then
             If rsDeposit.EOF = True Then
-                con.Execute ("insert into tbjual values('" & txt_bon & "','" & Format(tanggal, "yyyy-mm-dd") & "','" & 2 & "', '" & "Deposit" & "'," & harga_Deposit & "," & priceToNum(txt_BesarDeposit) / harga_Deposit & ", '2')")
+                'editV2
+                con.Execute ("insert into tbjual (nobukti, tglbukti, kode, nama_barang, harga_jual, jumlah_jual, kdsuplier) values('" & txt_bon & "','" & Format(tanggal, "yyyy-mm-dd") & "','" & 2 & "', '" & "Deposit" & "'," & harga_Deposit & "," & priceToNum(txt_BesarDeposit) / harga_Deposit & ", '2')")
             Else
                 con.Execute ("update tbjual set jumlah_jual = '" & priceToNum(txt_BesarDeposit) / harga_Deposit & "' where kode = '2' and nobukti = '" & txt_bon & "'")
             End If
@@ -736,12 +744,15 @@ Private Sub print_bon(tunai As Integer)
         Set rsCompare = con.Execute("select tanggal, jam, nobukti from bill where nobukti = '" & oldNobukti & "'")
         For m = 1 To Form_ReplaceRFID.lv_RFID.ListItems.count
             If flagX(m) = 0 Then
-                con.Execute ("insert into tbaktif values('" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "','" & Format(rsCompare!tanggal, "yyyy-mm-dd") & "','" & rsCompare!jam & "','1','" & rsCompare!nobukti & "')")
+                'editV2
+                con.Execute ("insert into tbaktif (rfid, tanggal, jam, status, keterangan) values('" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "','" & Format(rsCompare!tanggal, "yyyy-mm-dd") & "','" & rsCompare!jam & "','1','" & rsCompare!nobukti & "')")
+                'editV2
                 con.Execute ("insert into tbreader (rfid) values ('" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "')")
                 pushC1 Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1)
                 'y
-                con.Execute ("insert into tbrfid values('" & oldNobukti & "','" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "')")
-                con.Execute ("insert into tbrfid values('" & txt_bon.Text & "','" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "')")
+                'editV2
+'                con.Execute ("insert into tbrfid values('" & oldNobukti & "','" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "')")
+                con.Execute ("insert into tbrfid (nobukti, rfid) values('" & txt_bon.Text & "','" & Form_ReplaceRFID.lv_RFID.ListItems(m).SubItems(1) & "')")
             End If
         Next
         Set rsCompare = Nothing
