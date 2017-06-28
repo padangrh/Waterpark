@@ -127,6 +127,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Dim timerCount As Integer
+
 Private Sub cmdC1_1_Click()
     Tmr_RFIDEX.Enabled = False
     DoEvents
@@ -253,7 +255,7 @@ End Sub
 
 Private Sub Form_Load()
     lblDT.Caption = Format(Now, "dd/MM/yyyy HH:mm:ss")
-
+    timerCount = 0
     Dim namafile, file_data, huruf As String
     namafile = App.Path & "\DataReset.txt"
     IFile = FreeFile
@@ -329,17 +331,21 @@ End Sub
 
 Private Sub Tmr_RFIDEX_Timer()
     confirmAllC1
+    timerCount = timerCount + 1
+    If timerCount >= 30 Then
     Dim rsTbAktif As ADODB.Recordset
 '    Dim rsReader As ADODB.Recordset
-    Set rsTbAktif = con.Execute("select * from tbaktif where time_to_sec(timeDIFF(now(),concat(tanggal, ' ' , jam)))/3600 > 1 and status <> 0")
-    Do While Not rsTbAktif.EOF
-        con.Execute ("Update tbaktif set status = '0' where rfid = '" & rsTbAktif!rfid & "'")
-'        Set rsReader = con.Execute("select * from tbreader where rfid = '" & rsTbAktif!rfid & "'")
-        deleteC1 rsTbAktif!rfid
-        con.Execute ("Delete from tbreader where rfid = '" & rsTbAktif!rfid & "'")
-'        Set rsReader = Nothing
-        rsTbAktif.MoveNext
-    Loop
+        Set rsTbAktif = con.Execute("select * from tbaktif where time_to_sec(timeDIFF(now(),concat(tanggal, ' ' , jam)))/3600 > 6 and status <> 0")
+        Do While Not rsTbAktif.EOF
+            con.Execute ("Update tbaktif set status = '0' where rfid = '" & rsTbAktif!rfid & "'")
+    '        Set rsReader = con.Execute("select * from tbreader where rfid = '" & rsTbAktif!rfid & "'")
+            deleteC1 rsTbAktif!rfid
+            con.Execute ("Delete from tbreader where rfid = '" & rsTbAktif!rfid & "'")
+    '        Set rsReader = Nothing
+            rsTbAktif.MoveNext
+        Loop
+        timerCount = 0
+    End If
     
 End Sub
 

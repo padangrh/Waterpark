@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
 Object = "{FE9DED34-E159-408E-8490-B720A5E632C7}#1.0#0"; "zkemkeeper.dll"
 Begin VB.MDIForm FrmMain 
@@ -237,6 +237,9 @@ Begin VB.MDIForm FrmMain
       Begin VB.Menu rm 
          Caption         =   "RFID Manager"
       End
+      Begin VB.Menu c1m 
+         Caption         =   "C1 Manager"
+      End
       Begin VB.Menu hs 
          Caption         =   "History"
       End
@@ -284,6 +287,10 @@ End Sub
 Private Sub ad_Click()
     'Form_Deposit.Show vbModal, Me
     Call changeForm(Form_List_Deposit)
+End Sub
+
+Private Sub c1m_Click()
+    
 End Sub
 
 Private Sub cmdC1_1_Click()

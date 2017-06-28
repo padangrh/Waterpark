@@ -57,6 +57,7 @@ Form=Form_EditRFID.frm
 Form=Form_List_NonAktif.frm
 Form=Form_ReplaceRFID.frm
 Module=Module1; Module1.bas
+Form=Form_C1Manager.frm
 IconForm="Form_List_Supplier"
 Startup="FrmMain"
 HelpFile=""
