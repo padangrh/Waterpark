@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.Form Form_Print_Beli 
    BackColor       =   &H00FF8080&
    Caption         =   "Cetak Bill"
@@ -440,7 +440,7 @@ Private Sub txt_nama_supplier_KeyPress(KeyAscii As Integer)
 End Sub
 
 Private Sub txt_nama_supplier_LostFocus()
-    If Not Me.ActiveControl.Name = "list_supplier" Then
+    If Not Me.ActiveControl.name = "list_supplier" Then
         list_supplier.Visible = False
     End If
 End Sub
