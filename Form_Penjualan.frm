@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Object = "{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCT2.OCX"
 Object = "{648A5603-2C6E-101B-82B6-000000000014}#1.1#0"; "MSCOMM32.OCX"
 Begin VB.Form Form_Penjualan 
@@ -9,6 +9,7 @@ Begin VB.Form Form_Penjualan
    ClientLeft      =   -840
    ClientTop       =   450
    ClientWidth     =   20250
+   ControlBox      =   0   'False
    KeyPreview      =   -1  'True
    LinkTopic       =   "Form11"
    MDIChild        =   -1  'True
@@ -578,7 +579,7 @@ End Sub
 
 Private Sub kosongkan()
     txt_kode.Text = ""
-    txt_nama.Text = ""
+    txt_Nama.Text = ""
     txt_harga.Text = ""
     txt_jumlah.Text = 1
     list_nama.Visible = False
@@ -624,7 +625,7 @@ End Sub
 
 Private Sub txt_nama_Change()
     
-    If txt_nama.Text <> "" And txt_nama_toggle = False Then
+    If txt_Nama.Text <> "" And txt_nama_toggle = False Then
 '        list_nama.ListItems.Clear
         list_nama.Visible = True
 '        Dim rsFilter As ADODB.Recordset
@@ -667,7 +668,7 @@ End Sub
 Private Sub list_nama_DblClick()
     If getItemByID(list_nama.SelectedItem.Text) Then
         txt_kode.Text = rsbarang!kode
-        txt_nama.Text = rsbarang!nama
+        txt_Nama.Text = rsbarang!nama
         txt_harga.Text = Format(rsbarang!harga_jual, "###,###,##0")
         list_nama.Visible = False
         txt_jumlah.SetFocus
@@ -729,7 +730,7 @@ Private Sub txt_kode_KeyDown(key As Integer, Shift As Integer)
         Dim kode As String
         kode = Trim(txt_kode.Text)
         If getItemByID(kode) Then
-            txt_nama.Text = rsbarang!nama
+            txt_Nama.Text = rsbarang!nama
             txt_harga.Text = Format(rsbarang!harga_jual, "###,###,##0")
             txt_jumlah.SetFocus
             txt_jumlah.SelLength = Len(txt_jumlah.Text)
@@ -744,8 +745,8 @@ Private Sub txt_kode_KeyDown(key As Integer, Shift As Integer)
             MsgBox ("Kode ini tidak terdaftar")
             txt_kode.Text = ""
         End If
-    ElseIf Len(txt_nama) > 0 Then
-        txt_nama = ""
+    ElseIf Len(txt_Nama) > 0 Then
+        txt_Nama = ""
         txt_harga = ""
     End If
 End Sub
@@ -830,7 +831,7 @@ Public Sub reload_list()
     list_nama.ListItems.Clear
     'list_nama.Visible = True
     Dim rsFilter As ADODB.Recordset
-    Set rsFilter = con.Execute("select * from tbbarang where nama like '%" & txt_nama.Text & "%' and kode <> '2'")
+    Set rsFilter = con.Execute("select * from tbbarang where nama like '%" & txt_Nama.Text & "%' and kode <> '2'")
     
     If rsFilter.EOF Then
         list_nama.Visible = False
