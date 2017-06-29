@@ -290,7 +290,7 @@ Private Sub ad_Click()
 End Sub
 
 Private Sub c1m_Click()
-    
+    Form_C1Manager.Show
 End Sub
 
 Private Sub cmdC1_1_Click()
