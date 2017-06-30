@@ -2,15 +2,35 @@ VERSION 5.00
 Object = "{FE9DED34-E159-408E-8490-B720A5E632C7}#1.0#0"; "zkemkeeper.dll"
 Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
 Begin VB.Form frmMain 
+   BackColor       =   &H00400000&
    Caption         =   "Main"
-   ClientHeight    =   5490
+   ClientHeight    =   4320
    ClientLeft      =   120
    ClientTop       =   450
-   ClientWidth     =   12330
+   ClientWidth     =   7050
    LinkTopic       =   "Form1"
-   ScaleHeight     =   5490
-   ScaleWidth      =   12330
+   ScaleHeight     =   4320
+   ScaleWidth      =   7050
    StartUpPosition =   3  'Windows Default
+   Begin VB.CommandButton cmd_Log 
+      BackColor       =   &H00FFC0C0&
+      Caption         =   "Ambil Log"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   12
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   495
+      Left            =   4680
+      Style           =   1  'Graphical
+      TabIndex        =   8
+      Top             =   2160
+      Width           =   1935
+   End
    Begin VB.CommandButton cmdUpdate 
       BackColor       =   &H00FFC0C0&
       Caption         =   "Force Update"
@@ -103,23 +123,44 @@ Begin VB.Form frmMain
       Top             =   1920
       Width           =   735
    End
-   Begin VB.Label lblDT 
+   Begin VB.Label lbl_Status 
       Alignment       =   2  'Center
-      Caption         =   "dd/MM/yyyy HH:mm:ss"
+      BackColor       =   &H00400000&
       BeginProperty Font 
-         Name            =   "Garamond"
-         Size            =   14.25
+         Name            =   "MS Sans Serif"
+         Size            =   12
          Charset         =   0
          Weight          =   700
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   615
-      Left            =   4920
+      ForeColor       =   &H0000FFFF&
+      Height          =   495
+      Left            =   360
+      TabIndex        =   9
+      Top             =   3480
+      Width           =   6375
+   End
+   Begin VB.Label lblDT 
+      Alignment       =   2  'Center
+      BackColor       =   &H80000007&
+      Caption         =   "dd/MM/yyyy HH:mm:ss"
+      BeginProperty Font 
+         Name            =   "Consolas"
+         Size            =   14.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H0000FF00&
+      Height          =   735
+      Left            =   2640
       TabIndex        =   6
-      Top             =   840
-      Width           =   2175
+      Top             =   600
+      Width           =   2295
    End
 End
 Attribute VB_Name = "frmMain"
@@ -128,6 +169,37 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Dim timerCount As Integer
+Dim hourCount As Integer
+Dim Response As String
+Dim FileName As String
+
+Private Sub cmd_Log_Click()
+    Dim Soap_Request As String
+    cmd_Log.BackColor = &HFFFF&
+    Winsock1.LocalPort = 0
+    If Winsock1.State = sckClosed Then
+        FileName = "Logs" & Format(Now, "yyyy-MM-dd-hh-mm-hh") & ".txt"
+        If StatusC1_1 Then
+            Call requestLog(Setting_Object("C1_1"), True)
+            Tunggu 1
+            Call requestLog(Setting_Object("C1_1"), False)
+        End If
+        If StatusC1_2 Then
+            Call requestLog(Setting_Object("C1_2"), True)
+            Tunggu 1
+            Call requestLog(Setting_Object("C1_2"), False)
+        End If
+        If StatusC1_3 Then
+            Call requestLog(Setting_Object("C1_3"), True)
+            Tunggu 1
+            Call requestLog(Setting_Object("C1_3"), False)
+        End If
+        lbl_Status.Caption = "Logs Disimpan"
+    Else
+        lbl_Status.Caption (str(Winsock1.State))
+    End If
+    cmd_Log.BackColor = &HFFC0C0
+End Sub
 
 Private Sub cmdC1_1_Click()
     Tmr_RFIDEX.Enabled = False
@@ -322,55 +394,110 @@ Private Sub Form_unload(Cancel As Integer)
 End Sub
 
 Private Sub Timer1_Timer()
+    DoEvents
     Timer1.Enabled = False
 End Sub
 
 Private Sub tmr_Jam_Timer()
+    DoEvents
     lblDT.Caption = Format(Now, "dd/MM/yyyy HH:mm:ss")
 End Sub
 
 Private Sub Tmr_RFIDEX_Timer()
+    DoEvents
     confirmAllC1
+    DoEvents
     timerCount = timerCount + 1
+    hourCount = hourCount + 1
     If timerCount >= 30 Then
-    Dim rsTbAktif As ADODB.Recordset
-'    Dim rsReader As ADODB.Recordset
+        Dim rsTbAktif As ADODB.Recordset
         Set rsTbAktif = con.Execute("select * from tbaktif where time_to_sec(timeDIFF(now(),concat(tanggal, ' ' , jam)))/3600 > 6 and status <> 0")
         Do While Not rsTbAktif.EOF
             con.Execute ("Update tbaktif set status = '0' where rfid = '" & rsTbAktif!rfid & "'")
-    '        Set rsReader = con.Execute("select * from tbreader where rfid = '" & rsTbAktif!rfid & "'")
             deleteC1 rsTbAktif!rfid
             con.Execute ("Delete from tbreader where rfid = '" & rsTbAktif!rfid & "'")
-    '        Set rsReader = Nothing
             rsTbAktif.MoveNext
         Loop
         timerCount = 0
     End If
-    
+    DoEvents
+    If hourCount >= 60 Then
+        cmd_Log_Click
+        hourCount = 0
+    End If
 End Sub
 
-'Private Sub connectC1(ip As String)
-'    Dim bconn As Boolean
-'
-'    CZKEM1.BASE64 = 1
-'    CZKEM2.BASE64 = 1
-'    CZKEM3.BASE64 = 1
-'    bconn = False
-'
-'    bconn = CZKEM1.Connect_Net("192.168.1.250", 4370)
-'    If bconn Then CZKEM1.Beep 150
-'
-'    bconn = CZKEM2.Connect_Net("192.168.1.251", 4370)
-'    If bconn Then CZKEM2.Beep 150
-'
-'    bconn = CZKEM3.Connect_Net("192.168.1.252", 4370)
-'    If bconn Then CZKEM3.Beep 150
-'End Sub
+Private Sub Winsock1_DataArrival(ByVal bytesTotal As Long)
+    Winsock1.GetData Response 'Check for incoming response *IMPORTANT*
+    Dim namafile As String
+    
+    namafile = App.Path & "\" & FileName
+    Open namafile For Append As #1
+    Print #1, Response
+    Close #1
 
-'Private Sub disconnectC1()
-'    CZKEM1.Beep 150
-'    DoEvents
-'    CZKEM1.Disconnect
-'End Sub
+End Sub
 
+Sub Tunggu(Waktu)
+    Start = Timer
+    Do While Timer - Start < Waktu
+        DoEvents
+    Loop
+End Sub
 
+Sub WaitFor(ResponseCode As String)
+    Dim Tmr As Long
+    Dim Start As Long
+    Start = Timer ' Time event so won't get stuck in loop
+    While Len(Response) = 0
+        Tmr = Timer - Start
+        DoEvents ' Let System keep checking for incoming response **IMPORTANT**
+        If Tmr > 5 Then ' Time in seconds to wait
+            lbl_Status.Caption = "Koneksi Error, Time Out !!!" & vbNewLine & MsgTitle
+'            StatusTxt.Caption = "Disconnected"
+'            StatusTxt.Refresh
+            Keluar = True
+            Exit Sub
+        End If
+    Wend
+    While InStr(1, Response, ResponseCode) = 0
+        Tmr = Timer - Start
+        DoEvents
+        If Tmr > 5 Then
+            lbl_Status.Caption = "Koneksi Error, Data Invalid !!! " & vbNewLine & MsgTitle
+'            StatusTxt.Caption = "Disconnected"
+'            StatusTxt.Refresh
+            Keluar = True
+            Exit Sub
+        End If
+    Wend
+Response = "" ' Sent response code to blank **IMPORTANT**
+End Sub
+
+Private Sub requestLog(IP As String, SoapType As Boolean)
+    If SoapType Then
+        'Get Logs
+        Winsock1.Protocol = sckTCPProtocol
+        Winsock1.connect IP, 80
+        Tunggu 0.1
+        Winsock1.SendData ("POST /iWsService HTTP/1.0" + vbCrLf)
+        Winsock1.SendData ("Content-Type: text/xml" + vbCrLf)
+        Soap_Request = "<GetAttLog><ArgComKey xsi:type=""xsd:integer"">" & "0" & "</ArgComKey><Arg><PIN xsi:type=""xsd:integer"">All</PIN></Arg></GetAttLog>"
+        Winsock1.SendData ("Content-Length: " & Len(Soap_Request) & vbCrLf & vbCrLf)
+        Winsock1.SendData (Soap_Request + vbCrLf)
+        WaitFor ("</GetAttLogResponse>")
+        Winsock1.Close
+    Else
+        'Clear Logs
+        Winsock1.Protocol = sckTCPProtocol
+        Winsock1.connect IP, 80
+        Tunggu 0.1
+        Winsock1.SendData ("POST /iWsService HTTP/1.0" + vbCrLf)
+        Winsock1.SendData ("Content-Type: text/xml" + vbCrLf)
+        Soap_Request = "<ClearData><ArgComKey xsi:type=""xsd:integer"">" & "0" & "</ArgComKey><Arg><Value xsi:type=""xsd:integer"">3</Value></Arg></ClearData>"
+        Winsock1.SendData ("Content-Length: " & Len(Soap_Request) & vbCrLf & vbCrLf)
+        Winsock1.SendData (Soap_Request + vbCrLf)
+        WaitFor ("</ClearDataResponse>")
+        Winsock1.Close
+    End If
+End Sub

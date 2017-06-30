@@ -39,7 +39,7 @@ Public Function Eval(sJSON As String) As String
          End Select
       Next
    Else
-      MsgBox JSON.GetParserErrors, vbExclamation, "Parser Error"
+      frmMain.lbl_Status.Caption = JSON.GetParserErrors & vbNewLine & "Parser Error"
    End If
    Eval = SB.toString
 End Function
@@ -86,7 +86,7 @@ Public Function ExecCommand(ByRef obj As Variant) As String
                   ' command implementation
                   Select Case LCase(key)
                   Case "alert":
-                     MsgBox ExecCommand(this.Item("message")), vbInformation, ExecCommand(this.Item("title"))
+                     frmMain.lbl_Status.Caption = ExecCommand(this.Item("message")) & vbNewLine & ExecCommand(this.Item("title"))
                      
                   Case "input":
                      SB.Append InputBox(ExecCommand(this.Item("prompt")), ExecCommand(this.Item("title")), ExecCommand(this.Item("default")))
