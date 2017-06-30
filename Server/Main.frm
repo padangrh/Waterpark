@@ -136,7 +136,7 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H0000FFFF&
-      Height          =   495
+      Height          =   615
       Left            =   360
       TabIndex        =   9
       Top             =   3480
@@ -172,6 +172,8 @@ Dim timerCount As Integer
 Dim hourCount As Integer
 Dim Response As String
 Dim FileName As String
+Dim logStatus As Boolean
+Dim curLogMachine As String
 
 Private Sub cmd_Log_Click()
     Dim Soap_Request As String
@@ -196,7 +198,7 @@ Private Sub cmd_Log_Click()
         End If
         lbl_Status.Caption = "Logs Disimpan"
     Else
-        lbl_Status.Caption (str(Winsock1.State))
+        lbl_Status.Caption = (str(Winsock1.State))
     End If
     cmd_Log.BackColor = &HFFC0C0
 End Sub
@@ -214,6 +216,7 @@ Private Sub cmdC1_1_Click()
             If C1_1Con Then CZKEM1.Beep 150
             refillC1 1
             cmdC1_1.BackColor = &HFF00&
+            StatusC1_1 = True
         Else
             cmdC1_1.BackColor = &HFF&
         End If
@@ -234,6 +237,7 @@ Private Sub cmdC1_2_Click()
             If C1_2Con Then CZKEM2.Beep 150
             refillC1 2
             cmdC1_2.BackColor = &HFF00&
+            StatusC1_2 = True
         Else
             cmdC1_2.BackColor = &HFF&
         End If
@@ -254,6 +258,7 @@ Private Sub cmdC1_3_Click()
             If C1_3Con Then CZKEM3.Beep 150
             refillC1 3
             cmdC1_3.BackColor = &HFF00&
+            StatusC1_3 = True
         Else
             cmdC1_3.BackColor = &HFF&
         End If
@@ -328,21 +333,7 @@ End Sub
 Private Sub Form_Load()
     lblDT.Caption = Format(Now, "dd/MM/yyyy HH:mm:ss")
     timerCount = 0
-    Dim namafile, file_data, huruf As String
-    namafile = App.Path & "\DataReset.txt"
-    IFile = FreeFile
-    Open namafile For Input As #IFile
-    file_data = StrConv(InputB(LOF(IFile), IFile), vbUnicode)
-    Close #IFile
-    Dim xx As Integer
-    xx = DateDiff("d", file_data, Now)
-    If DateDiff("d", file_data, Now) > 0 Then
-        con.Execute ("Delete from tbreader")
-        con.Execute ("alter table tbreader auto_increment = 1")
-        Open namafile For Output As #1
-        Print #1, Now
-        Close #1
-    End If
+
     
     con.Execute ("alter table tbreader auto_increment = 1")
     
@@ -385,6 +376,25 @@ Private Sub Form_Load()
         Else
             StatusC1_3 = False
         End If
+    End If
+    
+    Dim namafile, file_data, huruf As String
+    namafile = App.Path & "\DataReset.txt"
+    IFile = FreeFile
+    Open namafile For Input As #IFile
+    file_data = StrConv(InputB(LOF(IFile), IFile), vbUnicode)
+    Close #IFile
+    Dim xx As Integer
+    xx = DateDiff("d", file_data, Now)
+    If DateDiff("d", file_data, Now) > 0 Then
+        con.Execute ("Delete from tbreader")
+        Call refillC1(1)
+        Call refillC1(2)
+        Call refillC1(3)
+        con.Execute ("alter table tbreader auto_increment = 1")
+        Open namafile For Output As #1
+        Print #1, Now
+        Close #1
     End If
 End Sub
 
@@ -430,11 +440,19 @@ End Sub
 Private Sub Winsock1_DataArrival(ByVal bytesTotal As Long)
     Winsock1.GetData Response 'Check for incoming response *IMPORTANT*
     Dim namafile As String
-    
-    namafile = App.Path & "\" & FileName
-    Open namafile For Append As #1
-    Print #1, Response
-    Close #1
+    Dim tempInt As Integer
+    tempInt = InStr(1, Response, "<")
+    If tempInt > 0 Then
+        Response = Mid(Response, tempInt)
+        namafile = App.Path & "\" & FileName
+        Open namafile For Append As #1
+        If logStatus Then
+            Print #1, "<MachineIP>" & curLogMachine & "</MachineIP>"
+            logStatus = False
+        End If
+        Print #1, Response
+        Close #1
+    End If
 
 End Sub
 
@@ -475,8 +493,10 @@ Response = "" ' Sent response code to blank **IMPORTANT**
 End Sub
 
 Private Sub requestLog(IP As String, SoapType As Boolean)
+    curLogMachine = IP
     If SoapType Then
         'Get Logs
+        logStatus = True
         Winsock1.Protocol = sckTCPProtocol
         Winsock1.connect IP, 80
         Tunggu 0.1
@@ -488,6 +508,7 @@ Private Sub requestLog(IP As String, SoapType As Boolean)
         WaitFor ("</GetAttLogResponse>")
         Winsock1.Close
     Else
+        logStatus = False
         'Clear Logs
         Winsock1.Protocol = sckTCPProtocol
         Winsock1.connect IP, 80

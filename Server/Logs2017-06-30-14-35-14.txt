@@ -78,7 +78,8 @@ h1 {
       The username and password must be lowercase, please ensure that the &quot;Caps Lock&quot; LED is disabled on your keyboard and try again.</P>
     <P><B><FONT size="4">Forgot your username or password?</FONT></B><BR>
       Please reset this device to the factory default settings if you have forgotten your username or password. The default username and password are both set as <B>&quot;admin&quot;</B>.<BR>
-      <B><FONT color=#ee0000>Note: The settings will be restored to factory default after the resetting.</FONT></B></P>
+      <B><FONT color=#ee0000>Note: The settings will be restored to factory default after the re
+</FONT></B></P>
     <P><B><FONT size="4">How to restore this device to the factory default settings?</FONT></B><BR>
       Firstly locate the reset button on the rear panel of the unit, whilst this device is powered on press and hold the <B>reset</B> button for more than 5 seconds, this device will then reboot and restore itself to the factory default settings. </P>
   </DIV>
@@ -87,6 +88,7 @@ h1 {
 </HTML>
 <MachineIP>192.168.1.251</MachineIP>
 <GetAttLogResponse>
+<Row><PIN>65534</PIN><DateTime>2017-06-30 14:35:23</DateTime><Verified>0</Verified><Status>0</Status><WorkCode>0</WorkCode></Row>
 </GetAttLogResponse>
 <ClearDataResponse>
 <Row><Result>1</Result><Information>Successfully!</Information></Row>

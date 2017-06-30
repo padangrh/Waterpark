@@ -23,25 +23,27 @@ Public Sub deleteC1(ReaderID As String)
     Dim bdltUser As Boolean
     confirmAllC1
     Set rsReader = con.Execute("select * from tbreader where rfid = '" & ReaderID & "'")
-    If StatusC1_1 Then
-        bdltUser = frmMain.CZKEM1.DeleteEnrollData(1, rsReader!id, 1, 12)
-    End If
-    If StatusC1_2 Then
-        bdltUser = frmMain.CZKEM2.DeleteEnrollData(1, rsReader!id, 1, 12)
-    End If
-    If StatusC1_3 Then
-        bdltUser = frmMain.CZKEM3.DeleteEnrollData(1, rsReader!id, 1, 12)
+    If Not rsReader.EOF Then
+        If StatusC1_1 Then
+            bdltUser = frmMain.CZKEM1.DeleteEnrollData(1, rsReader!id, 1, 12)
+        End If
+        If StatusC1_2 Then
+            bdltUser = frmMain.CZKEM2.DeleteEnrollData(1, rsReader!id, 1, 12)
+        End If
+        If StatusC1_3 Then
+            bdltUser = frmMain.CZKEM3.DeleteEnrollData(1, rsReader!id, 1, 12)
+        End If
     End If
 End Sub
 
 
-Public Function confirmC1(ip As String) As Boolean
+Public Function confirmC1(IP As String) As Boolean
     Dim yy As Boolean
     yy = False
 '    FrmMain.Winsock1.LocalPort = 0
     If frmMain.Winsock1.State = sckClosed Then
         frmMain.Winsock1.Protocol = sckTCPProtocol
-        frmMain.Winsock1.connect ip, 80
+        frmMain.Winsock1.connect IP, 80
         frmMain.Timer1.Enabled = True
         Do
             DoEvents
