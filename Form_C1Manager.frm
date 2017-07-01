@@ -511,19 +511,21 @@ Private Sub cmd_Push_Click()
     If Frame2.Caption = "Mesin" Then
         cmd_Load_Click
     End If
-    If MsgBox("Push data ke " & Frame2.Caption & " ?", vbYesNo, "Konfirmasi") = vbYes Then
-        If Frame2.Caption = "Mesin 1" And StatusC1_1 = True Then
-            refillC1 (1)
-            Call refresh_LV_Mesin(FrmMain.CZKEM1, StatusC1_1, FrmMain.cmdC1_1, Setting_Object("C1_1"))
-        ElseIf Frame2.Caption = "Mesin 2" And StatusC1_2 = True Then
-            refillC1 (2)
-            Call refresh_LV_Mesin(FrmMain.CZKEM2, StatusC1_2, FrmMain.cmdC1_2, Setting_Object("C1_2"))
-        ElseIf Frame2.Caption = "Mesin 3" And StatusC1_3 = True Then
-            refillC1 (3)
-            Call refresh_LV_Mesin(FrmMain.CZKEM3, StatusC1_3, FrmMain.cmdC1_3, Setting_Object("C1_3"))
+    If Frame2.Caption = "Mesin" Then
+        If MsgBox("Push data ke " & Frame2.Caption & " ?", vbYesNo, "Konfirmasi") = vbYes Then
+            If Frame2.Caption = "Mesin 1" And StatusC1_1 = True Then
+                refillC1 (1)
+                Call refresh_LV_Mesin(FrmMain.CZKEM1, StatusC1_1, FrmMain.cmdC1_1, Setting_Object("C1_1"))
+            ElseIf Frame2.Caption = "Mesin 2" And StatusC1_2 = True Then
+                refillC1 (2)
+                Call refresh_LV_Mesin(FrmMain.CZKEM2, StatusC1_2, FrmMain.cmdC1_2, Setting_Object("C1_2"))
+            ElseIf Frame2.Caption = "Mesin 3" And StatusC1_3 = True Then
+                refillC1 (3)
+                Call refresh_LV_Mesin(FrmMain.CZKEM3, StatusC1_3, FrmMain.cmdC1_3, Setting_Object("C1_3"))
+            End If
         End If
+        Cmb_Mesin.Text = Frame2.Caption
     End If
-    Cmb_Mesin.Text = Frame2.Caption
 End Sub
 
 Private Sub cmd_Refresh_Click()
