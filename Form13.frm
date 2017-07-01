@@ -558,7 +558,7 @@ Private Sub print_bon(tunai As Integer)
             'editV2
             con.Execute ("insert into tbdiskon (nobukti, supervisor, status, customer, nilai) values('" & txt_bon & "', '" & dis_spv & "', '" & dis_status & "', '" & dis_cust & "', " & priceToNum(txt_diskon) & ")")
         End If
-              
+        DoEvents
     Else
         'con.Execute ("update bill set cash = " & tunai & ", bayar = " & priceToNum(txt_uang) & ", diskon = " & priceToNum(txt_diskon) & " where nobukti = '" & txt_bon & "'")
         con.Execute ("update bill set cash = " & tunai & ", bayar = " & priceToNum(txt_uang) & ", diskon = " & priceToNum(txt_diskon) & ", jumlah = " & priceToNum(txt_subTotal) & " ,total = " & priceToNum(txt_grandTotal) & " where nobukti = '" & txt_bon & "'")

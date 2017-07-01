@@ -2,7 +2,8 @@ Attribute VB_Name = "Mod_CZKEM"
 Public Sub pushC1(rfid As String)
     Dim rsReader As ADODB.Recordset
     Dim bcrtUser As Boolean
-    confirmAllC1
+    'confirmAllC1
+    'checkInactiveC1
     Set rsReader = con.Execute("select * from tbreader where rfid = '" & rfid & "'")
     If StatusC1_1 Then
         frmMain.CZKEM1.CardNumber(0) = CLng(rfid)
@@ -21,7 +22,8 @@ End Sub
 Public Sub deleteC1(ReaderID As String)
     Dim rsReader As ADODB.Recordset
     Dim bdltUser As Boolean
-    confirmAllC1
+    'confirmAllC1
+    'checkInactiveC1
     Set rsReader = con.Execute("select * from tbreader where rfid = '" & ReaderID & "'")
     If Not rsReader.EOF Then
         If StatusC1_1 Then
@@ -37,13 +39,13 @@ Public Sub deleteC1(ReaderID As String)
 End Sub
 
 
-Public Function confirmC1(IP As String) As Boolean
+Public Function confirmC1(ip As String) As Boolean
     Dim yy As Boolean
     yy = False
 '    FrmMain.Winsock1.LocalPort = 0
     If frmMain.Winsock1.State = sckClosed Then
         frmMain.Winsock1.Protocol = sckTCPProtocol
-        frmMain.Winsock1.connect IP, 80
+        frmMain.Winsock1.connect ip, 80
         frmMain.Timer1.Enabled = True
         Do
             DoEvents
@@ -76,6 +78,51 @@ Public Sub confirmAllC1()
     If xx = False Then
         frmMain.cmdC1_3.BackColor = &HFF&
         StatusC1_3 = xx
+    End If
+    DoEvents
+End Sub
+
+Public Sub checkInactiveC1()
+    Dim xx As Boolean
+    xx = False
+    
+    If StatusC1_1 = False Then
+        StatusC1_1 = confirmC1(Setting_Object("C1_1"))
+        If StatusC1_1 Then
+            Dim C1_1Con As Boolean
+            CZKEM1.BASE64 = 1
+            C1_1Con = False
+            C1_1Con = CZKEM1.Connect_Net(Setting_Object("C1_1"), 4370)
+            If C1_1Con Then CZKEM1.Beep 150
+            refillC1 1
+            cmdC1_1.BackColor = &HFF00&
+        End If
+    End If
+    
+    If StatusC1_2 = False Then
+        StatusC1_2 = confirmC1(Setting_Object("C1_2"))
+        If StatusC1_2 Then
+            Dim C1_2Con As Boolean
+            CZKEM2.BASE64 = 1
+            C1_2Con = False
+            C1_2Con = CZKEM2.Connect_Net(Setting_Object("C1_2"), 4370)
+            If C1_2Con Then CZKEM2.Beep 150
+            refillC1 2
+            cmdC1_2.BackColor = &HFF00&
+        End If
+    End If
+    
+    If StatusC1_3 = False Then
+        StatusC1_3 = confirmC1(Setting_Object("C1_3"))
+        If StatusC1_3 Then
+            Dim C1_3Con As Boolean
+            CZKEM3.BASE64 = 1
+            C1_3Con = False
+            C1_3Con = CZKEM3.Connect_Net(Setting_Object("C1_3"), 4370)
+            If C1_3Con Then CZKEM3.Beep 150
+            refillC1 3
+            cmdC1_3.BackColor = &HFF00&
+        End If
     End If
     DoEvents
 End Sub

@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Object = "{38911DA0-E448-11D0-84A3-00DD01104159}#1.1#0"; "COMCT332.OCX"
 Begin VB.Form Form_List_barang 
    Caption         =   "Barang"
@@ -241,9 +241,11 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 Dim FilterCat, strsql As String
+
 Private Sub CoolBar1_HeightChanged(ByVal NewHeight As Single)
   Form_Resize
 End Sub
+
 Private Sub Form_Resize()
   CoolBar1.Width = Me.ScaleWidth
   LV1.Top = Me.ScaleTop + CoolBar1.Height
@@ -251,6 +253,7 @@ Private Sub Form_Resize()
   LV1.Width = Me.ScaleWidth
   LV1.Height = IIf(Me.ScaleHeight - CoolBar1.Height > 0, Me.ScaleHeight - CoolBar1.Height, 0)
 End Sub
+
 Public Sub refreshlist()
     Dim mitem As ListItem
     Dim rsbarang As New ADODB.Recordset
@@ -295,6 +298,7 @@ Private Sub Form_Load()
   txt_filter.Text = ""
   
  End Sub
+ 
 Private Sub LV1_ColumnClick(ByVal ColumnHeader As MSComctlLib.ColumnHeader)
   Dim i As Byte
   For i = 1 To LV1.ColumnHeaders.count
@@ -314,6 +318,7 @@ Private Sub LV1_ColumnClick(ByVal ColumnHeader As MSComctlLib.ColumnHeader)
     End If
   End If
 End Sub
+
 Private Sub txt_filter_change()
     refreshlist
 End Sub
@@ -344,10 +349,12 @@ Public Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
     Unload Me
   End Select
 End Sub
+
 Private Sub tambah()
   Form_Entri_Barang.Show (1)
   CoolBar1.Bands(3).Caption = "Record : " & LV1.ListItems.count
 End Sub
+
 Private Sub perbaiki()
     Form_Entri_Barang.txt_kode.Text = LV1.SelectedItem.Text
     Form_Entri_Barang.Show (1)

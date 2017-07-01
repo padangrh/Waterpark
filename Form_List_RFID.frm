@@ -10,6 +10,25 @@ Begin VB.Form Form_List_RFID
    LinkTopic       =   "Form1"
    ScaleHeight     =   8220
    ScaleWidth      =   11730
+   Begin VB.CommandButton cmd_Refresh 
+      BackColor       =   &H000080FF&
+      Caption         =   "Refresh"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   13.5
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   615
+      Left            =   6960
+      Style           =   1  'Graphical
+      TabIndex        =   10
+      Top             =   6840
+      Width           =   1575
+   End
    Begin VB.CommandButton cmdSalin 
       BackColor       =   &H000080FF&
       Caption         =   "Salin"
@@ -23,7 +42,7 @@ Begin VB.Form Form_List_RFID
          Strikethrough   =   0   'False
       EndProperty
       Height          =   615
-      Left            =   6720
+      Left            =   8880
       Style           =   1  'Graphical
       TabIndex        =   9
       Top             =   6840
@@ -78,7 +97,7 @@ Begin VB.Form Form_List_RFID
          Strikethrough   =   0   'False
       EndProperty
       Height          =   615
-      Left            =   4800
+      Left            =   5040
       Style           =   1  'Graphical
       TabIndex        =   5
       Top             =   6840
@@ -113,7 +132,7 @@ Begin VB.Form Form_List_RFID
          Strikethrough   =   0   'False
       EndProperty
       Height          =   615
-      Left            =   960
+      Left            =   1200
       Style           =   1  'Graphical
       TabIndex        =   1
       Top             =   6840
@@ -132,7 +151,7 @@ Begin VB.Form Form_List_RFID
          Strikethrough   =   0   'False
       EndProperty
       Height          =   615
-      Left            =   2880
+      Left            =   3120
       Style           =   1  'Graphical
       TabIndex        =   0
       Top             =   6840
@@ -274,7 +293,7 @@ Private Sub btn_Aktivasi_Click()
             pushC1 lv_RFID.SelectedItem.Text
             'y
         End If
-        reload_list
+        reload_List
     End If
 End Sub
 
@@ -287,7 +306,7 @@ Private Sub btn_Hapus_Click()
         deleteC1 lv_RFID.SelectedItem.Text
         con.Execute ("Delete from tbreader where rfid = '" & lv_RFID.SelectedItem.Text & "'")
         'y
-        reload_list
+        reload_List
     End If
 End Sub
 
@@ -300,44 +319,66 @@ Private Sub cb_Search_KeyPress(KeyAscii As Integer)
 End Sub
 
 Private Sub chk_Nonaktif_Click()
-    reload_list
+    reload_List
+End Sub
+
+Private Sub cmd_Refresh_Click()
+    reload_List
 End Sub
 
 Private Sub cmdSalin_Click()
-    If MsgBox("Transfer data?", vbYesNo, "Konfirmasi") = vbYes Then
-        cmdSalin.BackColor = &HFFFF&
-        If confirmC1(Setting_Object("C1_1")) Then
-            Dim C1_1Con As Boolean
-            FrmMain.CZKEM1.BASE64 = 1
-            C1_1Con = False
-            C1_1Con = FrmMain.CZKEM1.Connect_Net(Setting_Object("C1_1"), 4370)
-            If C1_1Con Then FrmMain.CZKEM1.Beep 150
-            refillC1 1
-        End If
-        If confirmC1(Setting_Object("C1_2")) Then
-            Dim C1_2Con As Boolean
-            FrmMain.CZKEM2.BASE64 = 1
-            C1_2Con = False
-            C1_2Con = FrmMain.CZKEM2.Connect_Net(Setting_Object("C1_2"), 4370)
-            If C1_2Con Then FrmMain.CZKEM2.Beep 150
-            refillC1 2
-        End If
-        If confirmC1(Setting_Object("C1_3")) Then
-            Dim C1_3Con As Boolean
-            FrmMain.CZKEM3.BASE64 = 1
-            C1_3Con = False
-            C1_3Con = FrmMain.CZKEM3.Connect_Net(Setting_Object("C1_3"), 4370)
-            If C1_3Con Then FrmMain.CZKEM3.Beep 150
-            refillC1 3
-        End If
-        cmdSalin.BackColor = &H80FF&
+    If MsgBox("Transfer TbAktif ke TbReader?", vbYesNo, "Konfirmasi") = vbYes Then
+        Dim rsAktif As ADODB.Recordset
+        Dim rsReader As ADODB.Recordset
+        
+        Set rsAktif = con.Execute("Select * from tbaktif where status = '1'")
+        
+'        If Not rsAktif.EOF Then
+'            con.Execute ("Delete from tbreader")
+'        End If
+        
+        Do While Not rsAktif.EOF
+            Set rsReader = con.Execute("Select * from tbreader where rfid = '" & rsAktif!rfid & "'")
+            If rsReader.EOF Then
+                con.Execute ("insert into tbreader (rfid) values ('" & rsAktif!rfid & "')")
+            End If
+            rsAktif.MoveNext
+        Loop
+        
         MsgBox "Data sudah disalin ke mesin"
+'        cmdSalin.BackColor = &HFFFF&
+'        If confirmC1(Setting_Object("C1_1")) Then
+'            Dim C1_1Con As Boolean
+'            FrmMain.CZKEM1.BASE64 = 1
+'            C1_1Con = False
+'            C1_1Con = FrmMain.CZKEM1.Connect_Net(Setting_Object("C1_1"), 4370)
+'            If C1_1Con Then FrmMain.CZKEM1.Beep 150
+'            refillC1 1
+'        End If
+'        If confirmC1(Setting_Object("C1_2")) Then
+'            Dim C1_2Con As Boolean
+'            FrmMain.CZKEM2.BASE64 = 1
+'            C1_2Con = False
+'            C1_2Con = FrmMain.CZKEM2.Connect_Net(Setting_Object("C1_2"), 4370)
+'            If C1_2Con Then FrmMain.CZKEM2.Beep 150
+'            refillC1 2
+'        End If
+'        If confirmC1(Setting_Object("C1_3")) Then
+'            Dim C1_3Con As Boolean
+'            FrmMain.CZKEM3.BASE64 = 1
+'            C1_3Con = False
+'            C1_3Con = FrmMain.CZKEM3.Connect_Net(Setting_Object("C1_3"), 4370)
+'            If C1_3Con Then FrmMain.CZKEM3.Beep 150
+'            refillC1 3
+'        End If
+'        cmdSalin.BackColor = &H80FF&
+'        MsgBox "Data sudah disalin ke mesin"
 
     End If
 End Sub
 
 Private Sub Form_Load()
-    reload_list
+    reload_List
     cb_Search.Clear
     Dim x As Integer
     For x = 1 To lv_RFID.ColumnHeaders.count
@@ -346,7 +387,7 @@ Private Sub Form_Load()
     cb_Search.ListIndex = 0
 End Sub
 
-Sub reload_list()
+Sub reload_List()
     lv_RFID.ListItems.Clear
     Dim rsRFID As ADODB.Recordset
     Dim query As String
@@ -433,7 +474,7 @@ Private Sub lv_RFID_ItemClick(ByVal item As MSComctlLib.ListItem)
 End Sub
 
 Private Sub txt_Search_Change()
-    reload_list
+    reload_List
 End Sub
 
 Private Sub btn_Tambah_Click()
@@ -456,7 +497,7 @@ Private Sub btn_Tambah_Click()
             con.Execute ("insert into tbreader (rfid) values ('" & temp_RFID & "')")
             pushC1 temp_RFID
             'y
-            reload_list
+            reload_List
         Else
             MsgBox ("Kartu sudah terdaftar")
         End If

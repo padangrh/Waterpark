@@ -12,6 +12,11 @@ Begin VB.Form frmMain
    ScaleHeight     =   4320
    ScaleWidth      =   7050
    StartUpPosition =   3  'Windows Default
+   Begin VB.Timer tmr_Checker 
+      Interval        =   60000
+      Left            =   5520
+      Top             =   240
+   End
    Begin VB.CommandButton cmd_Log 
       BackColor       =   &H00FFC0C0&
       Caption         =   "Ambil Log"
@@ -52,20 +57,20 @@ Begin VB.Form frmMain
    End
    Begin VB.Timer Timer1 
       Interval        =   1000
-      Left            =   1560
-      Top             =   2880
+      Left            =   6480
+      Top             =   720
    End
    Begin MSWinsockLib.Winsock Winsock1 
-      Left            =   2160
-      Top             =   2880
+      Left            =   6000
+      Top             =   720
       _ExtentX        =   741
       _ExtentY        =   741
       _Version        =   393216
    End
    Begin VB.Timer tmr_Jam 
       Interval        =   1000
-      Left            =   960
-      Top             =   2880
+      Left            =   6480
+      Top             =   240
    End
    Begin VB.CommandButton cmdC1_3 
       BackColor       =   &H000000FF&
@@ -96,8 +101,8 @@ Begin VB.Form frmMain
    End
    Begin VB.Timer Tmr_RFIDEX 
       Interval        =   60000
-      Left            =   360
-      Top             =   2880
+      Left            =   6000
+      Top             =   240
    End
    Begin zkemkeeperCtl.CZKEM CZKEM1 
       Height          =   735
@@ -145,6 +150,7 @@ Begin VB.Form frmMain
    Begin VB.Label lblDT 
       Alignment       =   2  'Center
       BackColor       =   &H80000007&
+      BackStyle       =   0  'Transparent
       Caption         =   "dd/MM/yyyy HH:mm:ss"
       BeginProperty Font 
          Name            =   "Consolas"
@@ -161,6 +167,14 @@ Begin VB.Form frmMain
       TabIndex        =   6
       Top             =   600
       Width           =   2295
+   End
+   Begin VB.Label lbl_BG 
+      BackColor       =   &H00000000&
+      Height          =   1095
+      Left            =   2640
+      TabIndex        =   10
+      Top             =   360
+      Width           =   2055
    End
 End
 Attribute VB_Name = "frmMain"
@@ -333,9 +347,6 @@ End Sub
 Private Sub Form_Load()
     lblDT.Caption = Format(Now, "dd/MM/yyyy HH:mm:ss")
     timerCount = 0
-
-    
-    con.Execute ("alter table tbreader auto_increment = 1")
     
     StatusC1_1 = Setting_Object("C1_1Status")
     StatusC1_2 = Setting_Object("C1_2Status")
@@ -408,18 +419,25 @@ Private Sub Timer1_Timer()
     Timer1.Enabled = False
 End Sub
 
+Private Sub tmr_Checker_Timer()
+    If timerCount Mod 5 = 0 Then
+        DoEvents
+        Call checkInactiveC1
+    End If
+End Sub
+
 Private Sub tmr_Jam_Timer()
     DoEvents
-    lblDT.Caption = Format(Now, "dd/MM/yyyy HH:mm:ss")
+    lblDT.Caption = Format(Now, " dd/MM/yyyy HH:mm:ss")
 End Sub
 
 Private Sub Tmr_RFIDEX_Timer()
-    DoEvents
-    confirmAllC1
+'    DoEvents
+'    confirmAllC1
     DoEvents
     timerCount = timerCount + 1
     hourCount = hourCount + 1
-    If timerCount >= 30 Then
+    If timerCount <= 1 Then
         Dim rsTbAktif As ADODB.Recordset
         Set rsTbAktif = con.Execute("select * from tbaktif where time_to_sec(timeDIFF(now(),concat(tanggal, ' ' , jam)))/3600 > 6 and status <> 0")
         Do While Not rsTbAktif.EOF
@@ -428,13 +446,17 @@ Private Sub Tmr_RFIDEX_Timer()
             con.Execute ("Delete from tbreader where rfid = '" & rsTbAktif!rfid & "'")
             rsTbAktif.MoveNext
         Loop
+    ElseIf timerCount >= 30 Then
+        timerCount = 0
+    End If
+    
+    DoEvents
+    If hourCount <= 1 Then
+        cmd_Log_Click
+    ElseIf timerCount >= 60 Then
         timerCount = 0
     End If
     DoEvents
-    If hourCount >= 60 Then
-        cmd_Log_Click
-        hourCount = 0
-    End If
 End Sub
 
 Private Sub Winsock1_DataArrival(ByVal bytesTotal As Long)
@@ -492,13 +514,13 @@ Sub WaitFor(ResponseCode As String)
 Response = "" ' Sent response code to blank **IMPORTANT**
 End Sub
 
-Private Sub requestLog(IP As String, SoapType As Boolean)
-    curLogMachine = IP
+Private Sub requestLog(ip As String, SoapType As Boolean)
+    curLogMachine = ip
     If SoapType Then
         'Get Logs
         logStatus = True
         Winsock1.Protocol = sckTCPProtocol
-        Winsock1.connect IP, 80
+        Winsock1.connect ip, 80
         Tunggu 0.1
         Winsock1.SendData ("POST /iWsService HTTP/1.0" + vbCrLf)
         Winsock1.SendData ("Content-Type: text/xml" + vbCrLf)
@@ -511,7 +533,7 @@ Private Sub requestLog(IP As String, SoapType As Boolean)
         logStatus = False
         'Clear Logs
         Winsock1.Protocol = sckTCPProtocol
-        Winsock1.connect IP, 80
+        Winsock1.connect ip, 80
         Tunggu 0.1
         Winsock1.SendData ("POST /iWsService HTTP/1.0" + vbCrLf)
         Winsock1.SendData ("Content-Type: text/xml" + vbCrLf)

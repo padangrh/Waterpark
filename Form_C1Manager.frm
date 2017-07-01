@@ -10,8 +10,8 @@ Begin VB.Form Form_C1Manager
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    MDIChild        =   -1  'True
-   ScaleHeight     =   8460
-   ScaleWidth      =   16770
+   ScaleHeight     =   10950
+   ScaleWidth      =   20250
    WindowState     =   2  'Maximized
    Begin VB.CommandButton cmd_Refresh 
       BackColor       =   &H0080FFFF&
@@ -46,10 +46,10 @@ Begin VB.Form Form_C1Manager
          Strikethrough   =   0   'False
       EndProperty
       Height          =   495
-      Left            =   14640
+      Left            =   15720
       Style           =   1  'Graphical
       TabIndex        =   8
-      Top             =   7320
+      Top             =   7440
       Width           =   1455
    End
    Begin VB.CommandButton cmd_Tambah 
@@ -66,10 +66,10 @@ Begin VB.Form Form_C1Manager
          Strikethrough   =   0   'False
       EndProperty
       Height          =   495
-      Left            =   12960
+      Left            =   14040
       Style           =   1  'Graphical
       TabIndex        =   7
-      Top             =   7320
+      Top             =   7440
       Width           =   1455
    End
    Begin VB.CommandButton cmd_Open3 
@@ -85,7 +85,7 @@ Begin VB.Form Form_C1Manager
          Strikethrough   =   0   'False
       EndProperty
       Height          =   495
-      Left            =   17520
+      Left            =   18240
       Style           =   1  'Graphical
       TabIndex        =   11
       Top             =   4560
@@ -104,7 +104,7 @@ Begin VB.Form Form_C1Manager
          Strikethrough   =   0   'False
       EndProperty
       Height          =   495
-      Left            =   17520
+      Left            =   18240
       Style           =   1  'Graphical
       TabIndex        =   10
       Top             =   3840
@@ -123,7 +123,7 @@ Begin VB.Form Form_C1Manager
          Strikethrough   =   0   'False
       EndProperty
       Height          =   495
-      Left            =   17520
+      Left            =   18240
       Style           =   1  'Graphical
       TabIndex        =   9
       Top             =   3120
@@ -131,7 +131,7 @@ Begin VB.Form Form_C1Manager
    End
    Begin VB.CommandButton cmd_Push 
       BackColor       =   &H00808080&
-      Caption         =   "Push >>"
+      Caption         =   " Push >>"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
          Size            =   12
@@ -141,12 +141,12 @@ Begin VB.Form Form_C1Manager
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   495
-      Left            =   6720
+      Height          =   735
+      Left            =   8520
       Style           =   1  'Graphical
       TabIndex        =   1
-      Top             =   1080
-      Width           =   1455
+      Top             =   3120
+      Width           =   855
    End
    Begin VB.CommandButton cmd_Load 
       BackColor       =   &H00808080&
@@ -161,7 +161,7 @@ Begin VB.Form Form_C1Manager
          Strikethrough   =   0   'False
       EndProperty
       Height          =   495
-      Left            =   10680
+      Left            =   13440
       Style           =   1  'Graphical
       TabIndex        =   3
       Top             =   1080
@@ -179,7 +179,7 @@ Begin VB.Form Form_C1Manager
       EndProperty
       Height          =   480
       ItemData        =   "Form_C1Manager.frx":0000
-      Left            =   8640
+      Left            =   11400
       List            =   "Form_C1Manager.frx":000D
       TabIndex        =   2
       Text            =   "Combo1"
@@ -198,8 +198,8 @@ Begin VB.Form Form_C1Manager
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   6495
-      Left            =   8640
+      Height          =   6615
+      Left            =   9720
       TabIndex        =   12
       Top             =   1680
       Width           =   7875
@@ -396,7 +396,7 @@ Begin VB.Form Form_C1Manager
          Strikethrough   =   0   'False
       EndProperty
       Height          =   2895
-      Left            =   17160
+      Left            =   17880
       TabIndex        =   14
       Top             =   2520
       Width           =   2175
@@ -448,10 +448,6 @@ End Sub
 
 Private Sub cmd_Load_Click()
     If MsgBox("Load data " & Cmb_Mesin.Text, vbYesNo, "Konfirmasi") = vbYes Then
-'        Dim tempCZKEM As CZKEM
-'        Dim tempStatus As Boolean
-'        Dim tempButton As CommandButton
-'        Dim tempIP As String
         If frame_Tambah.Visible = True Then
             cmd_TambahCancel_Click
         End If
@@ -471,39 +467,31 @@ Private Sub cmd_Load_Click()
         cmd_RefreshMesin.Enabled = True
         cmd_Tambah.Enabled = True
         cmd_Hapus.Enabled = True
-
-'
-'        Set tempCZKEM = Nothing
-'        Set tempButton = Nothing
-'
-'        If Cmb_Mesin.ListIndex = 0 Then
-'            StatusC1_1 = tempStatus
-'        ElseIf Cmb_Mesin.ListIndex = 1 Then
-'            StatusC1_2 = tempStatus
-'        ElseIf Cmb_Mesin.ListIndex = 2 Then
-'            StatusC1_3 = tempStatus
-'        End If
-'
-
             
     End If
 End Sub
 
 Private Sub cmd_Open1_Click()
-    If StatusC1_1 Then
-        FrmMain.CZKEM1.ACUnlock CLng(1), 100
+    If MsgBox("Buka pintu 1?", vbYesNo, "Konfirmasi") = vbYes Then
+        If StatusC1_1 Then
+            FrmMain.CZKEM1.ACUnlock CLng(1), 100
+        End If
     End If
 End Sub
 
 Private Sub cmd_Open2_Click()
-    If StatusC1_2 Then
-        FrmMain.CZKEM2.ACUnlock CLng(1), 100
+    If MsgBox("Buka pintu 2?", vbYesNo, "Konfirmasi") = vbYes Then
+        If StatusC1_2 Then
+            FrmMain.CZKEM2.ACUnlock CLng(1), 100
+        End If
     End If
 End Sub
 
 Private Sub cmd_Open3_Click()
-    If StatusC1_3 Then
-        FrmMain.CZKEM3.ACUnlock CLng(1), 100
+    If MsgBox("Buka pintu 3?", vbYesNo, "Konfirmasi") = vbYes Then
+        If StatusC1_3 Then
+            FrmMain.CZKEM3.ACUnlock CLng(1), 100
+        End If
     End If
 End Sub
 
@@ -511,7 +499,7 @@ Private Sub cmd_Push_Click()
     If Frame2.Caption = "Mesin" Then
         cmd_Load_Click
     End If
-    If Frame2.Caption = "Mesin" Then
+    If Frame2.Caption <> "Mesin" Then
         If MsgBox("Push data ke " & Frame2.Caption & " ?", vbYesNo, "Konfirmasi") = vbYes Then
             If Frame2.Caption = "Mesin 1" And StatusC1_1 = True Then
                 refillC1 (1)
@@ -547,27 +535,27 @@ Private Sub cmd_Tambah_Click()
 End Sub
 
 Private Sub cmd_TambahCancel_Click()
-    txt_ID.Text = ""
+    txt_id.Text = ""
     txt_RFID.Text = ""
     frame_Tambah.Visible = False
 End Sub
 
 Private Sub cmd_TambahOK_Click()
-    If txt_ID.Text < 65534 And txt_ID.Text > 0 And Len(txt_RFID.Text) = 8 Then
+    If txt_id.Text < 65534 And txt_id.Text > 0 And Len(txt_RFID.Text) = 8 Then
         If Frame2.Caption = "Mesin 1" Then
             FrmMain.CZKEM1.CardNumber(0) = txt_RFID.Text
-            bcrtUser = FrmMain.CZKEM1.SetUserInfo(1, txt_ID.Text, "Tamu", "0751", 0, 1)
+            bcrtUser = FrmMain.CZKEM1.SetUserInfo(1, txt_id.Text, "Tamu", "0751", 0, 1)
             Call refresh_LV_Mesin(FrmMain.CZKEM1, StatusC1_1, FrmMain.cmdC1_1, Setting_Object("C1_1"))
         ElseIf Frame2.Caption = "Mesin 2" Then
             FrmMain.CZKEM2.CardNumber(0) = txt_RFID.Text
-            bcrtUser = FrmMain.CZKEM2.SetUserInfo(1, txt_ID.Text, "Tamu", "0751", 0, 1)
+            bcrtUser = FrmMain.CZKEM2.SetUserInfo(1, txt_id.Text, "Tamu", "0751", 0, 1)
             Call refresh_LV_Mesin(FrmMain.CZKEM2, StatusC1_2, FrmMain.cmdC1_2, Setting_Object("C1_2"))
         ElseIf Frame2.Caption = "Mesin 3" Then
             FrmMain.CZKEM3.CardNumber(0) = txt_RFID.Text
-            bcrtUser = FrmMain.CZKEM3.SetUserInfo(1, txt_ID.Text, "Tamu", "0751", 0, 1)
+            bcrtUser = FrmMain.CZKEM3.SetUserInfo(1, txt_id.Text, "Tamu", "0751", 0, 1)
             Call refresh_LV_Mesin(FrmMain.CZKEM3, StatusC1_3, FrmMain.cmdC1_3, Setting_Object("C1_3"))
         End If
-        txt_ID.Text = ""
+        txt_id.Text = ""
         txt_RFID.Text = ""
         frame_Tambah.Visible = False
     Else
